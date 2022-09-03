@@ -1,13 +1,18 @@
-﻿using ShoppingBasket.Service.Models;
+﻿using ShoppingBasket.Service.Infrastructure;
+using ShoppingBasket.Service.Infrastructure.Factories;
+using ShoppingBasket.Service.Models;
 using ShoppingBasket.Service.Models.Factories;
 
 namespace ShoppingBasket.Service.Services.Shopping
 {
     public class ShoppingBasketService : BaseService, IShoppingBasketService
     {
+        private IShoppingBasketLogger _logger;
+
         public ShoppingBasketService(IBasketCalculationService basketCalculationService)
         {
             BasketCalculationService = basketCalculationService;
+            _logger = LoggerFactory.CreateShoppingLogger();
         }
 
         protected IBasketCalculationService BasketCalculationService { get; }
@@ -28,6 +33,7 @@ namespace ShoppingBasket.Service.Services.Shopping
             shoppingBasket.Total = await BasketCalculationService.CalculateTotalAsync(shoppingBasket.ShoppingBasketItems, shoppingBasket.Discounts);
 
             //TODO log total
+            await _logger.LogTotalAsync(shoppingBasket);
         }
 
         private Task ValidateBasketAsync(IShoppingBasket shoppingBasket)

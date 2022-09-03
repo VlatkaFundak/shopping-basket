@@ -21,6 +21,7 @@ namespace ShoppingBasket.Service
             services.AddTransient<IDiscountFactory, DiscountFactory>();
 
             services.AddSingleton<ILogger, FileLogger>();
+            services.AddSingleton<IShoppingBasketLogger, ShoppingBasketLogger>();
         }
     }
 }
