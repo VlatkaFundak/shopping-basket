@@ -1,4 +1,4 @@
-﻿namespace ShoppingBasket.Service.Common.QueryParams
+﻿namespace ShoppingBasket.Service.Common.Enums
 {
     /// <summary>
     /// Sort order available enums.

@@ -16,7 +16,7 @@ namespace ShoppingBasket.Service.Services.ShoppingBasketDetails
         /// <summary>
         /// The logger
         /// </summary>
-        private IShoppingBasketLogger _logger;
+        private readonly IShoppingBasketLogger _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShoppingBasketService"/> class.

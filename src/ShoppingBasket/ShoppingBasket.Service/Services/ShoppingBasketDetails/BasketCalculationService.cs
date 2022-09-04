@@ -29,16 +29,6 @@ namespace ShoppingBasket.Service.Services.ShoppingBasketDetails
         protected IEnumerable<IDiscountProvider> DiscountProviders { get; set; }
 
         /// <summary>
-        /// Calculates the total without discunt asynchronous.
-        /// </summary>
-        /// <param name="shoppingBasketItems">The shopping basket items.</param>
-        /// <returns></returns>
-        protected virtual Task<decimal> CalculateTotalWithoutDiscuntAsync(IEnumerable<IShoppingBasketItem> shoppingBasketItems)
-        {
-            return Task.FromResult(shoppingBasketItems.Sum(p => p.Quantity * p.Product.Price));
-        }
-
-        /// <summary>
         /// Calculates the total asynchronous.
         /// </summary>
         /// <param name="shoppingBasketItems">The shopping basket items.</param>
@@ -50,6 +40,16 @@ namespace ShoppingBasket.Service.Services.ShoppingBasketDetails
             var discount = await CalculateBasketDiscountAsync(shoppingBasketItems, discounts);
 
             return total - discount;
+        }
+
+        /// <summary>
+        /// Calculates the total without discunt asynchronous.
+        /// </summary>
+        /// <param name="shoppingBasketItems">The shopping basket items.</param>
+        /// <returns></returns>
+        protected virtual Task<decimal> CalculateTotalWithoutDiscuntAsync(IEnumerable<IShoppingBasketItem> shoppingBasketItems)
+        {
+            return Task.FromResult(shoppingBasketItems.Sum(p => p.Quantity * p.Product.Price));
         }
 
         /// <summary>

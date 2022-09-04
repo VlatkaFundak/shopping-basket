@@ -75,15 +75,5 @@ namespace ShoppingBasket.Service.Tests
             //Asert
             Assert.Equal(expected, basket.Total);
         }
-
-        [Fact(Skip = "Do not run now")] //TODO implement
-        public void CalculateBasketTotalAsync_EmptyItemsShouldReturnZero()
-        {
-            //Arrange
-
-            //Act
-
-            //Asert
-        }
     }
 }

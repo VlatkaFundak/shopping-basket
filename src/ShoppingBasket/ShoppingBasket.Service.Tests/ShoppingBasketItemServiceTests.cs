@@ -11,7 +11,7 @@ namespace ShoppingBasket.Service.Tests
     [ExcludeFromCodeCoverage]
     public class ShoppingBasketItemServiceTests
     {
-        private Fixture _fixture;
+        private readonly Fixture _fixture;
 
         public ShoppingBasketItemServiceTests()
         {
@@ -62,11 +62,13 @@ namespace ShoppingBasket.Service.Tests
                 shoppingBasketService = new Mock<IShoppingBasketService>();
                 shoppingBasketItemFilterParams = new Mock<IShoppingBasketItemFilterParams>();
 
-                IShoppingBasket shoppingBasket = new TestData.ShoppingBasketMock();
-                shoppingBasket.Id = Guid.NewGuid();
-                shoppingBasket.UserIdentifier = "user_cookie_info_1";
-                shoppingBasket.DateCreated = DateTime.Now;
-                shoppingBasket.DateUpdated = DateTime.Now;
+                IShoppingBasket shoppingBasket = new TestData.ShoppingBasketMock
+                {
+                    Id = Guid.NewGuid(),
+                    UserIdentifier = "user_cookie_info_1",
+                    DateCreated = DateTime.Now,
+                    DateUpdated = DateTime.Now
+                };
 
                 shoppingBasketItemFilterParams.Setup(p => p.ShoppingBasketId).Returns(shoppingBasket.Id);
 

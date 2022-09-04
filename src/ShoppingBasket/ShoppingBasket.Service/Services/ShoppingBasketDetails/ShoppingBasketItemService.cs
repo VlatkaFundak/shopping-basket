@@ -15,17 +15,17 @@ namespace ShoppingBasket.Service.Services.ShoppingBasketDetails
     public class ShoppingBasketItemService : BaseService, IShoppingBasketItemService
     {
         /// <summary>
+        /// The items
+        /// </summary>
+        private HashSet<IShoppingBasketItem> _items;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ShoppingBasketItemService"/> class.
         /// </summary>
         public ShoppingBasketItemService() //TODO implement inject ShoppingBasketRepository for CRUD operations from database
         {
             _items = new HashSet<IShoppingBasketItem>();
         }
-
-        /// <summary>
-        /// The items
-        /// </summary>
-        private HashSet<IShoppingBasketItem> _items;
 
         /// <summary>
         /// Deletes the shopping basket item asynchronous.

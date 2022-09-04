@@ -5,14 +5,14 @@ using ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts;
 
 namespace ShoppingBasket.Service.Tests
 {
-    public static class TestData
+    internal static class TestData
     {
         public static (string categoryName, Guid id) ProductBakedGoodsCategoryName = new("Baked goods", Guid.Parse("ce450579-3998-4140-b698-0a2843912140"));
         public static (string categoryName, Guid id) ProductDairyGoodsCategoryName = new("Dairy goods", Guid.Parse("5802b263-f01e-4f48-ac66-3c14f34d208a"));
 
-        internal static (string productName, Guid id, decimal price) BreadProduct = new("Bread", Guid.Parse("6e79a5b7-e196-4f73-8767-628552fbd26f"), 1.00m);
-        internal static (string productName, Guid id, decimal price) MilkProduct = new("Milk", Guid.Parse("5d61b761-9d0d-4194-bdce-7d877a192625"), 1.15m);
-        internal static (string productName, Guid id, decimal price) ButterProduct = new("Milk", Guid.Parse("07e0f7b4-7904-4bef-8a09-a2c721b2bbe3"), 0.80m);
+        public static (string productName, Guid id, decimal price) BreadProduct = new("Bread", Guid.Parse("6e79a5b7-e196-4f73-8767-628552fbd26f"), 1.00m);
+        public static (string productName, Guid id, decimal price) MilkProduct = new("Milk", Guid.Parse("5d61b761-9d0d-4194-bdce-7d877a192625"), 1.15m);
+        public static (string productName, Guid id, decimal price) ButterProduct = new("Milk", Guid.Parse("07e0f7b4-7904-4bef-8a09-a2c721b2bbe3"), 0.80m);
 
         public static IEnumerable<IProduct> CreateProducts()
         {
@@ -26,21 +26,23 @@ namespace ShoppingBasket.Service.Tests
             return products;
         }
 
-        internal static IProduct CreateProduct(Guid id, Guid productCategoryId, decimal price, string name)
+        public static IProduct CreateProduct(Guid id, Guid productCategoryId, decimal price, string name)
         {
-            var product = new ProductMock();
-            product.ProductCategoryId = productCategoryId;
-            product.Id = id;
-            product.DateCreated = DateTime.UtcNow;
-            product.DateUpdated = DateTime.UtcNow;
-            product.Price = price;
-            product.Name = name;
+            var product = new ProductMock
+            {
+                ProductCategoryId = productCategoryId,
+                Id = id,
+                DateCreated = DateTime.UtcNow,
+                DateUpdated = DateTime.UtcNow,
+                Price = price,
+                Name = name
+            };
 
             return product;
         }
 
         // buy x get y percentage discount
-        internal static IAnotherProductPercentageDiscount CreateProductPercentageDiscount(int percentage, int quantity, int discountQuantity, DateTime startDate,
+        public static IAnotherProductPercentageDiscount CreateProductPercentageDiscount(int percentage, int quantity, int discountQuantity, DateTime startDate,
             bool excludeOtherDiscounts = false, Guid? mainProductId = null, Guid? discountProductId = null)
         {
             var discount = new AnotherProductPercentageDiscountMock
@@ -59,8 +61,8 @@ namespace ShoppingBasket.Service.Tests
             return discount;
         }
 
-        // buy x, get x/ free
-        internal static IProductQuantityDiscount CreateExtraQuantityProductDiscount(int quantity, int discountQuantity, DateTime startDate,
+        // buy x, get x free
+        public static IProductQuantityDiscount CreateExtraQuantityProductDiscount(int quantity, int discountQuantity, DateTime startDate,
             bool excludeOtherDiscounts = false, Guid? mainProductId = null)
         {
             var discount = new ProductQuantityDiscountMock
@@ -77,7 +79,7 @@ namespace ShoppingBasket.Service.Tests
             return discount;
         }
 
-        internal static IEnumerable<IDiscount> FindActiveDiscounts()
+        public static IEnumerable<IDiscount> FindActiveDiscounts()
         {
             IList<IDiscount> discounts = new List<IDiscount>
             {

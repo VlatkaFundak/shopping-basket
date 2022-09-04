@@ -1,4 +1,6 @@
-﻿namespace ShoppingBasket.Service.Common.QueryParams
+﻿using ShoppingBasket.Service.Common.Enums;
+
+namespace ShoppingBasket.Service.Common.QueryParams
 {
     /// <summary>
     /// Sorting params.
