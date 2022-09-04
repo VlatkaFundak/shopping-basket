@@ -1,4 +1,5 @@
 ﻿using ShoppingBasket.Service.Common.Enums;
+using ShoppingBasket.Service.Models;
 using ShoppingBasket.Service.Models.Discounts;
 using ShoppingBasket.Service.Models.Discounts.Contracts;
 using ShoppingBasket.Service.Models.Products;
@@ -38,6 +39,17 @@ namespace ShoppingBasket.Service.Tests
             product.Name = name;
 
             return product;
+        }
+
+        internal static IShoppingBasket CreateShoppingBasket(string userIdentifier)
+        {
+            return new ShoppingBasket.Service.Models.ShoppingBasket
+            {
+                UserIdentifier = userIdentifier,
+                Id = Guid.NewGuid(),
+                DateCreated = DateTime.Now,
+                DateUpdated = DateTime.Now
+            };
         }
 
         // buy x get y percentage discount

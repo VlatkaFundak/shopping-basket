@@ -5,7 +5,7 @@ namespace ShoppingBasket.Service.Services.Shopping
     /// <summary>
     /// Basket calculation service contract
     /// </summary>
-    public interface IBasketCalculationService
+    internal interface IBasketCalculationService
     {
         /// <summary>
         /// Calculates the total asynchronous.

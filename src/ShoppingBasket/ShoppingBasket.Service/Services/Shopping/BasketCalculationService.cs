@@ -7,13 +7,13 @@ namespace ShoppingBasket.Service.Services.Shopping
     /// Basket calculation service
     /// </summary>
     /// <seealso cref="ShoppingBasket.Service.Services.Shopping.IBasketCalculationService" />
-    public class BasketCalculationService : IBasketCalculationService
+    internal class BasketCalculationService : IBasketCalculationService
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BasketCalculationService"/> class.
         /// </summary>
         /// <param name="discountProviders">The discount providers.</param>
-        public BasketCalculationService(IEnumerable<IDiscountProvider> discountProviders)
+        internal BasketCalculationService(IEnumerable<IDiscountProvider> discountProviders)
         {
             DiscountProviders = discountProviders;
         }

@@ -21,7 +21,7 @@ namespace ShoppingBasket.Service.Services.Shopping
         /// Initializes a new instance of the <see cref="ShoppingBasketService"/> class.
         /// </summary>
         /// <param name="basketCalculationService">The basket calculation service.</param>
-        public ShoppingBasketService(IBasketCalculationService basketCalculationService)
+        internal ShoppingBasketService(IBasketCalculationService basketCalculationService)
         {
             BasketCalculationService = basketCalculationService;
             _logger = LoggerFactory.CreateShoppingLogger();
@@ -33,7 +33,7 @@ namespace ShoppingBasket.Service.Services.Shopping
         /// <value>
         /// The basket calculation service.
         /// </value>
-        protected IBasketCalculationService BasketCalculationService { get; }
+        internal IBasketCalculationService BasketCalculationService { get; }
 
         /// <summary>
         /// Creates the shopping basket asynchronous.

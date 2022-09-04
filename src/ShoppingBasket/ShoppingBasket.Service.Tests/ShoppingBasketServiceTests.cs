@@ -1,10 +1,12 @@
 ﻿using ShoppingBasket.Service.Common.Filters;
 using ShoppingBasket.Service.Providers;
 using ShoppingBasket.Service.Services.Shopping;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace ShoppingBasket.Service.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class ShoppingBasketServiceTests
     {
         [Theory]
