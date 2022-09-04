@@ -12,29 +12,29 @@ namespace ShoppingBasket.Service.Tests
         [InlineData(2, 0, 2, 3.10)]
         [InlineData(0, 4, 0, 3.45)]
         [InlineData(1, 8, 2, 9.00)]
-        public async Task CalculateBasketTotalAsync_Should_Return_(int breadQuantity, int milkQuantity, int butterQuantity, decimal result)
+        public async Task CalculateBasketTotalAsync_ShouldReturnTrue(int breadQuantity, int milkQuantity, int butterQuantity, decimal expected)
         {
             //Arrange - arrange values and setup everything
-            decimal expected = result;
+
             var products = TestData.CreateProducts();
             var shoppingBasketItemService = new ShoppingBasketItemService();
             IEnumerable<IDiscountProvider> providers = new List<IDiscountProvider>
             {
                 new AnotherProductPercentageDiscountProvider(),
-                new ExtraProductFreeDiscountProvider()
+                new ProductQuantityDiscountProvider()
             };
 
-            var calculationBasketService = new BasketCalculationService(providers.ToArray());
+            var calculationBasketService = new BasketCalculationService(providers.ToList());
             var shoppingBasketService = new ShoppingBasketService(calculationBasketService);
 
             var basket = await shoppingBasketService.CreateShoppingBasketAsync("user_cookie_1");
             var newShoppingBasketItems = new List<IShoppingBasketItem>();
 
-            foreach (var product in products)
+            await Task.WhenAll(products.Select(async (product) =>
             {
                 var item = await shoppingBasketItemService.CreateShoppingBasketItemAsync(basket.Id);
 
-                if (product.Id.Equals(Guid.Parse("07e0f7b4-7904-4bef-8a09-a2c721b2bbe3")) && butterQuantity > 0)
+                if (product.Id.Equals(TestData.ButterProduct.id) && butterQuantity > 0)
                 {
                     item.Quantity = butterQuantity;
 
@@ -43,7 +43,7 @@ namespace ShoppingBasket.Service.Tests
                     newShoppingBasketItems.Add(item);
                 }
 
-                if (product.Id.Equals(Guid.Parse("6e79a5b7-e196-4f73-8767-628552fbd26f")) && breadQuantity > 0)
+                if (product.Id.Equals(TestData.BreadProduct.id) && breadQuantity > 0)
                 {
                     item.Quantity = breadQuantity;
 
@@ -52,7 +52,7 @@ namespace ShoppingBasket.Service.Tests
                     newShoppingBasketItems.Add(item);
                 }
 
-                if (product.Id.Equals(Guid.Parse("5d61b761-9d0d-4194-bdce-7d877a192625")) && milkQuantity > 0)
+                if (product.Id.Equals(TestData.MilkProduct.id) && milkQuantity > 0)
                 {
                     item.Quantity = milkQuantity;
 
@@ -60,23 +60,21 @@ namespace ShoppingBasket.Service.Tests
                     item.Product = product;
                     newShoppingBasketItems.Add(item);
                 }
-            }
-            await shoppingBasketItemService.AddShoppingBasketItemAsync(newShoppingBasketItems);
-            var items = await shoppingBasketItemService.FindShoppingBasketItemAsync(new ShoppingBasketItemFilterParams { UserIdentifier = basket.UserIdentifier });
+            }).ToArray());
 
-            basket.ShoppingBasketItems = items;
+            await shoppingBasketItemService.AddShoppingBasketItemAsync(newShoppingBasketItems);
+            basket.ShoppingBasketItems = await shoppingBasketItemService.FindShoppingBasketItemAsync(new ShoppingBasketItemFilterParams { ShoppingBasketId = basket.Id }, null, null);
             basket.Discounts = TestData.GetDiscounts();
 
             //Act
             await shoppingBasketService.CalculateBasketTotalAsync(basket);
 
             //Asert
-
             Assert.Equal(expected, basket.Total);
         }
 
         [Fact(Skip = "Do not run now")]
-        public void CalculateBasketTotalAsync_ShouldThrowException()
+        public void CalculateBasketTotalAsync_EmptyItemsShouldThrowException()
         {
             //Arrange
 

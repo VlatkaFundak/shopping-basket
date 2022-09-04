@@ -2,9 +2,16 @@
 
 namespace ShoppingBasket.Service.Models.Discounts.Factories
 {
-    public class DiscountFactory : IDiscountFactory
+    /// <summary>
+    /// Discount factory.
+    /// </summary>
+    public static class DiscountFactory
     {
-        public IDiscount CreateDiscount()
+        /// <summary>
+        /// Creates the discount.
+        /// </summary>
+        /// <returns></returns>
+        public static IDiscount CreateDiscount()
         {
             return new Discount();
         }

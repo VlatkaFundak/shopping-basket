@@ -4,10 +4,10 @@ using ShoppingBasket.Service.Models.Discounts.Contracts;
 namespace ShoppingBasket.Service.Providers
 {
     /// <summary>
-    /// Another prodcut percentage discount provider
+    /// Product quantity discount provider
     /// </summary>
     /// <seealso cref="ShoppingBasket.Service.Providers.IDiscountProvider" />
-    public class AnotherProductPercentageDiscountProvider : IDiscountProvider
+    public class ProductQuantityDiscountProvider : IDiscountProvider
     {
         /// <summary>
         /// Gets the type of the discount.
@@ -15,7 +15,7 @@ namespace ShoppingBasket.Service.Providers
         /// <value>
         /// The type of the discount.
         /// </value>
-        public DiscountType DiscountType => DiscountType.ProductPercentage;
+        public DiscountType DiscountType => DiscountType.ProductQuantity;
 
         /// <summary>
         /// Gets the discount asynchronous.
@@ -25,7 +25,7 @@ namespace ShoppingBasket.Service.Providers
         /// <returns></returns>
         public Task<decimal> GetDiscountAsync(IEnumerable<IShoppingBasketItem> shoppingBasketItems, IEnumerable<IDiscount> discounts)
         {
-            return CalculateDiscountAsync(shoppingBasketItems, discounts.Cast<IAnotherProductPercentageDiscount>());
+            return CalculateDiscountAsync(shoppingBasketItems, discounts.Cast<IProductQuantityDiscount>());
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace ShoppingBasket.Service.Providers
         /// <param name="shoppingBasketItems">The shopping basket items.</param>
         /// <param name="discounts">The discounts.</param>
         /// <returns></returns>
-        protected internal Task<decimal> CalculateDiscountAsync(IEnumerable<IShoppingBasketItem> shoppingBasketItems, IEnumerable<IAnotherProductPercentageDiscount> discounts)
+        protected internal Task<decimal> CalculateDiscountAsync(IEnumerable<IShoppingBasketItem> shoppingBasketItems, IEnumerable<IProductQuantityDiscount> discounts)
         {
             decimal discountResult = 0m;
 
@@ -43,24 +43,16 @@ namespace ShoppingBasket.Service.Providers
                 var mainProduct = shoppingBasketItems.FirstOrDefault(p => p.ProductId == discount.MainProductId);
                 if (mainProduct is not null && mainProduct.Quantity >= discount.MainQuantity)
                 {
-                    var discountProduct = shoppingBasketItems.FirstOrDefault(p => p.ProductId == discount.DiscountProductId);
-                    if (discountProduct is null)
+                    var quantityDiscount = (int)Math.Floor(mainProduct.Quantity / (discount.MainQuantity + discount.DiscountQuantity));
+
+                    if (mainProduct.Quantity <= quantityDiscount)
                     {
-                        return Task.FromResult(0m);
+                        discountResult += mainProduct.Quantity * mainProduct.Product.Price;
                     }
 
-                    var quantityDiscount = (int)Math.Floor(mainProduct.Quantity / discount.MainQuantity);
-
-                    var discountPrice = (discount.Percentage / 100m) * discountProduct.Product.Price;
-
-                    if (discountProduct.Quantity <= quantityDiscount)
+                    if (mainProduct.Quantity > quantityDiscount)
                     {
-                        discountResult += discountProduct.Quantity * discountPrice;
-                    }
-
-                    if (discountProduct.Quantity > quantityDiscount)
-                    {
-                        discountResult += quantityDiscount * discountPrice;
+                        discountResult += quantityDiscount * mainProduct.Product.Price;
                     }
                 }
             }

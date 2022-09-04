@@ -4,8 +4,17 @@ using System.Reflection;
 
 namespace ShoppingBasket.Service.Infrastructure
 {
+    /// <summary>
+    /// Shopping basket logger.
+    /// </summary>
+    /// <seealso cref="ShoppingBasket.Service.Infrastructure.FileLogger" />
+    /// <seealso cref="ShoppingBasket.Service.Infrastructure.IShoppingBasketLogger" />
     internal class ShoppingBasketLogger : FileLogger, IShoppingBasketLogger //log4net usually
     {
+        /// <summary>
+        /// Logs the total asynchronous.
+        /// </summary>
+        /// <param name="shoppingBasket">The shopping basket.</param>
         public async Task LogTotalAsync(IShoppingBasket shoppingBasket)
         {
             var filePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);

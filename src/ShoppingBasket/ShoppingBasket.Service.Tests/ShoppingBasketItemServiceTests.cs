@@ -8,7 +8,7 @@ namespace ShoppingBasket.Service.Tests
     public class ShoppingBasketItemServiceTests
     {
         [Fact]
-        public async void AddShoppingBasketItemAsync_ShouldAddToArray()
+        public async void AddShoppingBasketItemAsync_ShouldAddNewItems()
         {
             //Arange
             var products = TestData.CreateProducts();
@@ -17,11 +17,11 @@ namespace ShoppingBasket.Service.Tests
 
             var basket = await shoppingBasketService.CreateShoppingBasketAsync("user_cookie_1");
 
-            var items = await shoppingBasketItemService.FindShoppingBasketItemAsync(new ShoppingBasketItemFilterParams { UserIdentifier = basket.UserIdentifier });
+            var items = await shoppingBasketItemService.FindShoppingBasketItemAsync(new ShoppingBasketItemFilterParams { ShoppingBasketId = basket.Id }, null, null);
             var expected = items.Count() + products.Count();
             var newShoppingBasketItems = new List<IShoppingBasketItem>();
 
-            foreach (var product in products)
+            await Task.WhenAll(products.Select(async (product) =>
             {
                 var item = await shoppingBasketItemService.CreateShoppingBasketItemAsync(basket.Id);
                 item.ProductId = product.Id;
@@ -29,11 +29,11 @@ namespace ShoppingBasket.Service.Tests
                 item.Quantity = 5;
 
                 newShoppingBasketItems.Add(item);
-            }
+            }).ToArray());
 
             //Act
             await shoppingBasketItemService.AddShoppingBasketItemAsync(newShoppingBasketItems);
-            items = await shoppingBasketItemService.FindShoppingBasketItemAsync(new ShoppingBasketItemFilterParams { UserIdentifier = basket.UserIdentifier });
+            items = await shoppingBasketItemService.FindShoppingBasketItemAsync(new ShoppingBasketItemFilterParams { ShoppingBasketId = basket.Id }, null, null);
 
             //Assert
             Assert.Equal(expected, items.Count());

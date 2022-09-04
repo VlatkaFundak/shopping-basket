@@ -5,18 +5,41 @@ using ShoppingBasket.Service.Models.Factories;
 
 namespace ShoppingBasket.Service.Services.Shopping
 {
+    /// <summary>
+    /// Shopping basket service
+    /// </summary>
+    /// <seealso cref="ShoppingBasket.Service.Services.BaseService" />
+    /// <seealso cref="ShoppingBasket.Service.Services.Shopping.IShoppingBasketService" />
     public class ShoppingBasketService : BaseService, IShoppingBasketService
     {
+        /// <summary>
+        /// The logger
+        /// </summary>
         private IShoppingBasketLogger _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ShoppingBasketService"/> class.
+        /// </summary>
+        /// <param name="basketCalculationService">The basket calculation service.</param>
         public ShoppingBasketService(IBasketCalculationService basketCalculationService)
         {
             BasketCalculationService = basketCalculationService;
             _logger = LoggerFactory.CreateShoppingLogger();
         }
 
+        /// <summary>
+        /// Gets the basket calculation service.
+        /// </summary>
+        /// <value>
+        /// The basket calculation service.
+        /// </value>
         protected IBasketCalculationService BasketCalculationService { get; }
 
+        /// <summary>
+        /// Creates the shopping basket asynchronous.
+        /// </summary>
+        /// <param name="userIdentifier">The user identifier.</param>
+        /// <returns></returns>
         public async Task<IShoppingBasket> CreateShoppingBasketAsync(string userIdentifier) //TODO maybe remove?
         {
             var basket = ShoppingBasketFactory.CreateShoppingBasket();
@@ -26,6 +49,10 @@ namespace ShoppingBasket.Service.Services.Shopping
             return basket;
         }
 
+        /// <summary>
+        /// Calculates the basket total asynchronous.
+        /// </summary>
+        /// <param name="shoppingBasket">The shopping basket.</param>
         public async Task CalculateBasketTotalAsync(IShoppingBasket shoppingBasket)
         {
             await ValidateBasketAsync(shoppingBasket);
@@ -36,11 +63,17 @@ namespace ShoppingBasket.Service.Services.Shopping
             await _logger.LogTotalAsync(shoppingBasket);
         }
 
+        /// <summary>
+        /// Validates the basket asynchronous.
+        /// </summary>
+        /// <param name="shoppingBasket">The shopping basket.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentException">There are no items in the basket to calculate total. Please add items to cart first.</exception>
         private Task ValidateBasketAsync(IShoppingBasket shoppingBasket)
         {
             if (shoppingBasket is null || shoppingBasket.ShoppingBasketItems is null || !shoppingBasket.ShoppingBasketItems.Any())
             {
-                throw new ArgumentException("There are no items in the basketto calculate total. Please add items to cart first.");
+                throw new ArgumentException("There are no items in the basket to calculate total. Please add items to cart first.");
             }
 
             return Task.CompletedTask;
