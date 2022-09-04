@@ -7,7 +7,7 @@ namespace ShoppingBasket.Service.Models.Discounts
     /// </summary>
     /// <seealso cref="ShoppingBasket.Service.Models.Discounts.Discount" />
     /// <seealso cref="ShoppingBasket.Service.Models.Discounts.Contracts.IProductQuantityDiscount" />
-    public class ProductQuantityDiscount : Discount, IProductQuantityDiscount
+    internal class ProductQuantityDiscount : Discount, IProductQuantityDiscount
     {
         /// <summary>
         /// Gets or sets the main quantity.

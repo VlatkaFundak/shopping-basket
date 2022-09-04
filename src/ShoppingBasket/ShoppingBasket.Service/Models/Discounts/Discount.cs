@@ -8,7 +8,7 @@ namespace ShoppingBasket.Service.Models.Discounts
     /// </summary>
     /// <seealso cref="ShoppingBasket.Service.Models.BaseModel" />
     /// <seealso cref="ShoppingBasket.Service.Models.Discounts.Contracts.IDiscount" />
-    public class Discount : BaseModel, IDiscount
+    public abstract class Discount : BaseModel, IDiscount  //TODO maybe change this, there is a dillema should I leave everything in one model, or as now is, separate ones
     {
         /// <summary>
         /// Gets or sets the type of the discount.

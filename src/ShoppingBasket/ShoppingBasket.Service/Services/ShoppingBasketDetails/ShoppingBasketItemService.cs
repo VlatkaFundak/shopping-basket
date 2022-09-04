@@ -17,7 +17,7 @@ namespace ShoppingBasket.Service.Services.ShoppingBasketDetails
         /// <summary>
         /// Initializes a new instance of the <see cref="ShoppingBasketItemService"/> class.
         /// </summary>
-        public ShoppingBasketItemService() //TODO inject ShoppingBasketRepository for fetching items from database
+        public ShoppingBasketItemService() //TODO implement inject ShoppingBasketRepository for CRUD operations from database
         {
             _items = new HashSet<IShoppingBasketItem>();
         }
@@ -99,7 +99,7 @@ namespace ShoppingBasket.Service.Services.ShoppingBasketDetails
             foreach (var item in items)
             {
                 await InitializeAsync(item);
-                _items.Add(item); // TODO call to database to save item
+                _items.Add(item);
             }
         }
     }

@@ -8,7 +8,7 @@ namespace ShoppingBasket.Service.Models.ShoppingBasketDetails
     /// </summary>
     /// <seealso cref="ShoppingBasket.Service.Models.BaseModel" />
     /// <seealso cref="ShoppingBasket.Service.Models.IShoppingBasket" />
-    public class ShoppingBasket : BaseModel, IShoppingBasket
+    internal class ShoppingBasket : BaseModel, IShoppingBasket
     {
         /// <summary>
         /// Gets or sets the shopping basket items.

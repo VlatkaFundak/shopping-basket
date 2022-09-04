@@ -9,6 +9,19 @@ namespace ShoppingBasket.Service.Tests
     [ExcludeFromCodeCoverage]
     public class ShoppingBasketServiceTests
     {
+        private readonly IEnumerable<IDiscountProvider> _providers;
+        private readonly ShoppingBasketService _shoppingBasketService;
+
+        public ShoppingBasketServiceTests()
+        {
+            _providers = new List<IDiscountProvider>
+            {
+                new AnotherProductPercentageDiscountProvider(),
+                new ProductQuantityDiscountProvider()
+            };
+            _shoppingBasketService = new ShoppingBasketService(new BasketCalculationService(_providers.ToList()));
+        }
+
         [Theory]
         [InlineData(1, 1, 1, 2.95)]
         [InlineData(2, 0, 2, 3.10)]
@@ -19,19 +32,12 @@ namespace ShoppingBasket.Service.Tests
             //Arrange - arrange values and setup everything
 
             var products = TestData.CreateProducts();
-            IEnumerable<IDiscountProvider> providers = new List<IDiscountProvider>
-            {
-                new AnotherProductPercentageDiscountProvider(),
-                new ProductQuantityDiscountProvider()
-            };
 
-            var shoppingBasketService = new ShoppingBasketService(new BasketCalculationService(providers.ToList()));
-
-            var basket = await shoppingBasketService.CreateShoppingBasketAsync("user_cookie_1");
+            var basket = await _shoppingBasketService.CreateShoppingBasketAsync("user_cookie_1");
 
             var newShoppingBasketItems = new List<IShoppingBasketItem>();
 
-            _ = products.Select(product =>
+            foreach (var product in products)
             {
                 IShoppingBasketItem item = new TestData.ShoppingBasketItemMock { ShoppingBasketId = basket.Id };
 
@@ -58,22 +64,20 @@ namespace ShoppingBasket.Service.Tests
                     item.Product = product;
                     newShoppingBasketItems.Add(item);
                 }
-
-                return true;
-            }).ToArray();
+            }
 
             basket.ShoppingBasketItems = newShoppingBasketItems;
             basket.Discounts = TestData.FindActiveDiscounts();
 
             //Act
-            await shoppingBasketService.CalculateBasketTotalAsync(basket);
+            await _shoppingBasketService.CalculateBasketTotalAsync(basket);
 
             //Asert
             Assert.Equal(expected, basket.Total);
         }
 
-        [Fact(Skip = "Do not run now")]
-        public void CalculateBasketTotalAsync_EmptyItemsShouldThrowException()
+        [Fact(Skip = "Do not run now")] //TODO implement
+        public void CalculateBasketTotalAsync_EmptyItemsShouldReturnZero()
         {
             //Arrange
 

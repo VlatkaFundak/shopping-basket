@@ -12,9 +12,6 @@
         /// <returns>
         ///   <c>true</c> if [is null or empty] [the specified value]; otherwise, <c>false</c>.
         /// </returns>
-        public static bool IsNullOrEmpty(Guid? value)
-        {
-            return Guid.Equals(value, null) || Guid.Equals(value, Guid.Empty) ? true : false;
-        }
+        public static bool IsNullOrEmpty(Guid? value) => Equals(value, null) || Equals(value, Guid.Empty);
     }
 }

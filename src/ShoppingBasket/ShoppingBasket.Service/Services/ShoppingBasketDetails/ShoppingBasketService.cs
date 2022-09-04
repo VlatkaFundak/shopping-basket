@@ -41,7 +41,7 @@ namespace ShoppingBasket.Service.Services.ShoppingBasketDetails
         /// </summary>
         /// <param name="userIdentifier">The user identifier.</param>
         /// <returns></returns>
-        public async Task<IShoppingBasket> CreateShoppingBasketAsync(string userIdentifier) //TODO maybe remove?
+        public async Task<IShoppingBasket> CreateShoppingBasketAsync(string userIdentifier)
         {
             var basket = ShoppingBasketFactory.CreateShoppingBasket();
             basket.UserIdentifier = userIdentifier;
@@ -56,7 +56,12 @@ namespace ShoppingBasket.Service.Services.ShoppingBasketDetails
         /// <param name="shoppingBasket">The shopping basket.</param>
         public async Task CalculateBasketTotalAsync(IShoppingBasket shoppingBasket)
         {
-            await ValidateBasketAsync(shoppingBasket);
+            var isValid = await ValidateBasketAsync(shoppingBasket);
+            if (!isValid)
+            {
+                shoppingBasket.Total = decimal.Zero;
+                return;
+            }
 
             shoppingBasket.Total = await BasketCalculationService.CalculateTotalAsync(shoppingBasket.ShoppingBasketItems, shoppingBasket.Discounts);
 
@@ -70,15 +75,17 @@ namespace ShoppingBasket.Service.Services.ShoppingBasketDetails
         /// <param name="shoppingBasket">The shopping basket.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentException">There are no items in the basket to calculate total. Please add items to cart first.</exception>
-        private Task ValidateBasketAsync(IShoppingBasket shoppingBasket)
+        protected virtual Task<bool> ValidateBasketAsync(IShoppingBasket shoppingBasket)
         {
             if (shoppingBasket is null || shoppingBasket.ShoppingBasketItems is null || !shoppingBasket.ShoppingBasketItems.Any())
             {
-                _logger.LogError("There are no items in the basket to calculate total. Please add items to cart first.");
-                throw new ArgumentException("There are no items in the basket to calculate total. Please add items to cart first.");
+                string message = "There are no items in the basket to calculate total. Please add items to cart first.";
+                _logger.LogError(message);
+
+                return Task.FromResult(false);
             }
 
-            return Task.CompletedTask;
+            return Task.FromResult(true);
         }
     }
 }

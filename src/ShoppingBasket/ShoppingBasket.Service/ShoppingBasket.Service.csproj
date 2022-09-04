@@ -14,4 +14,8 @@
 	</AssemblyAttribute>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\Discounts\Factories\" />
+  </ItemGroup>
+
 </Project>

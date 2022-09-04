@@ -26,6 +26,7 @@ namespace ShoppingBasket.Service.Providers
         /// <returns></returns>
         public Task<decimal> GetDiscountAsync(IEnumerable<IShoppingBasketItem> shoppingBasketItems, IEnumerable<IDiscount> discounts)
         {
+            //TODO maybe change this, there is a dillema should I leave everything in one model, or as now is, separate ones, and cast
             return CalculateDiscountAsync(shoppingBasketItems, discounts.Cast<IAnotherProductPercentageDiscount>());
         }
 
@@ -35,9 +36,9 @@ namespace ShoppingBasket.Service.Providers
         /// <param name="shoppingBasketItems">The shopping basket items.</param>
         /// <param name="discounts">The discounts.</param>
         /// <returns></returns>
-        protected internal Task<decimal> CalculateDiscountAsync(IEnumerable<IShoppingBasketItem> shoppingBasketItems, IEnumerable<IAnotherProductPercentageDiscount> discounts)
+        protected virtual Task<decimal> CalculateDiscountAsync(IEnumerable<IShoppingBasketItem> shoppingBasketItems, IEnumerable<IAnotherProductPercentageDiscount> discounts)
         {
-            decimal discountResult = 0m;
+            decimal discountResult = decimal.Zero;
 
             foreach (var discount in discounts)
             {

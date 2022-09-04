@@ -33,7 +33,7 @@ namespace ShoppingBasket.Service.Services.ShoppingBasketDetails
         /// </summary>
         /// <param name="shoppingBasketItems">The shopping basket items.</param>
         /// <returns></returns>
-        protected Task<decimal> CalculateTotalWithoutDiscuntAsync(IEnumerable<IShoppingBasketItem> shoppingBasketItems)
+        protected virtual Task<decimal> CalculateTotalWithoutDiscuntAsync(IEnumerable<IShoppingBasketItem> shoppingBasketItems)
         {
             return Task.FromResult(shoppingBasketItems.Sum(p => p.Quantity * p.Product.Price));
         }

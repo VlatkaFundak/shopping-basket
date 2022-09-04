@@ -8,7 +8,7 @@ namespace ShoppingBasket.Service.Models.Products
     /// </summary>
     /// <seealso cref="ShoppingBasket.Service.Models.BaseModel" />
     /// <seealso cref="ShoppingBasket.Service.Models.Products.Contracts.IProduct" />
-    public class Product : BaseModel, IProduct
+    internal class Product : BaseModel, IProduct
     {
         /// <summary>
         /// Gets or sets the name.
