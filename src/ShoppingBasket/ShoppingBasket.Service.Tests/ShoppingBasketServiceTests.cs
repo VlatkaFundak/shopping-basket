@@ -1,6 +1,6 @@
-﻿using ShoppingBasket.Service.Common.Filters;
+﻿using ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts;
 using ShoppingBasket.Service.Providers;
-using ShoppingBasket.Service.Services.Shopping;
+using ShoppingBasket.Service.Services.ShoppingBasketDetails;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
@@ -19,27 +19,25 @@ namespace ShoppingBasket.Service.Tests
             //Arrange - arrange values and setup everything
 
             var products = TestData.CreateProducts();
-            var shoppingBasketItemService = new ShoppingBasketItemService();
             IEnumerable<IDiscountProvider> providers = new List<IDiscountProvider>
             {
                 new AnotherProductPercentageDiscountProvider(),
                 new ProductQuantityDiscountProvider()
             };
 
-            var calculationBasketService = new BasketCalculationService(providers.ToList());
-            var shoppingBasketService = new ShoppingBasketService(calculationBasketService);
+            var shoppingBasketService = new ShoppingBasketService(new BasketCalculationService(providers.ToList()));
 
             var basket = await shoppingBasketService.CreateShoppingBasketAsync("user_cookie_1");
+
             var newShoppingBasketItems = new List<IShoppingBasketItem>();
 
-            await Task.WhenAll(products.Select(async (product) =>
+            _ = products.Select(product =>
             {
-                var item = await shoppingBasketItemService.CreateShoppingBasketItemAsync(basket.Id);
+                IShoppingBasketItem item = new TestData.ShoppingBasketItemMock { ShoppingBasketId = basket.Id };
 
                 if (product.Id.Equals(TestData.ButterProduct.id) && butterQuantity > 0)
                 {
                     item.Quantity = butterQuantity;
-
                     item.ProductId = product.Id;
                     item.Product = product;
                     newShoppingBasketItems.Add(item);
@@ -48,7 +46,6 @@ namespace ShoppingBasket.Service.Tests
                 if (product.Id.Equals(TestData.BreadProduct.id) && breadQuantity > 0)
                 {
                     item.Quantity = breadQuantity;
-
                     item.ProductId = product.Id;
                     item.Product = product;
                     newShoppingBasketItems.Add(item);
@@ -57,16 +54,16 @@ namespace ShoppingBasket.Service.Tests
                 if (product.Id.Equals(TestData.MilkProduct.id) && milkQuantity > 0)
                 {
                     item.Quantity = milkQuantity;
-
                     item.ProductId = product.Id;
                     item.Product = product;
                     newShoppingBasketItems.Add(item);
                 }
-            }).ToArray());
 
-            await shoppingBasketItemService.AddShoppingBasketItemAsync(newShoppingBasketItems);
-            basket.ShoppingBasketItems = await shoppingBasketItemService.FindShoppingBasketItemAsync(new ShoppingBasketItemFilterParams { ShoppingBasketId = basket.Id }, null, null);
-            basket.Discounts = TestData.GetDiscounts();
+                return true;
+            }).ToArray();
+
+            basket.ShoppingBasketItems = newShoppingBasketItems;
+            basket.Discounts = TestData.FindActiveDiscounts();
 
             //Act
             await shoppingBasketService.CalculateBasketTotalAsync(basket);

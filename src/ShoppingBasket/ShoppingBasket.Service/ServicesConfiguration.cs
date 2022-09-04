@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ShoppingBasket.Service.Infrastructure;
 using ShoppingBasket.Service.Providers;
-using ShoppingBasket.Service.Services.Shopping;
+using ShoppingBasket.Service.Services.ShoppingBasketDetails;
+using ShoppingBasket.Service.Services.ShoppingBasketDetails.Contracts;
 
 namespace ShoppingBasket.Service
 {

@@ -1,4 +1,4 @@
-﻿using ShoppingBasket.Service.Models;
+﻿using ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts;
 
 namespace ShoppingBasket.Service.Infrastructure
 {

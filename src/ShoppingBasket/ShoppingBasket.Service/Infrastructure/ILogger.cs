@@ -17,5 +17,11 @@
         /// <param name="message">The message.</param>
         /// <param name="ex">The ex.</param>
         void LogError(string message, Exception ex);
+
+        /// <summary>
+        /// Logs the error.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        void LogError(string message);
     }
 }

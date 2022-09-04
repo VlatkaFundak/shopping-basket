@@ -1,15 +1,16 @@
 ﻿using ShoppingBasket.Service.Infrastructure;
 using ShoppingBasket.Service.Infrastructure.Factories;
-using ShoppingBasket.Service.Models;
-using ShoppingBasket.Service.Models.Factories;
+using ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts;
+using ShoppingBasket.Service.Models.ShoppingBasketDetails.Factories;
+using ShoppingBasket.Service.Services.ShoppingBasketDetails.Contracts;
 
-namespace ShoppingBasket.Service.Services.Shopping
+namespace ShoppingBasket.Service.Services.ShoppingBasketDetails
 {
     /// <summary>
     /// Shopping basket service
     /// </summary>
     /// <seealso cref="ShoppingBasket.Service.Services.BaseService" />
-    /// <seealso cref="ShoppingBasket.Service.Services.Shopping.IShoppingBasketService" />
+    /// <seealso cref="ShoppingBasket.Service.Services.ShoppingBasketDetails.Contracts.IShoppingBasketService" />
     public class ShoppingBasketService : BaseService, IShoppingBasketService
     {
         /// <summary>
@@ -73,6 +74,7 @@ namespace ShoppingBasket.Service.Services.Shopping
         {
             if (shoppingBasket is null || shoppingBasket.ShoppingBasketItems is null || !shoppingBasket.ShoppingBasketItems.Any())
             {
+                _logger.LogError("There are no items in the basket to calculate total. Please add items to cart first.");
                 throw new ArgumentException("There are no items in the basket to calculate total. Please add items to cart first.");
             }
 

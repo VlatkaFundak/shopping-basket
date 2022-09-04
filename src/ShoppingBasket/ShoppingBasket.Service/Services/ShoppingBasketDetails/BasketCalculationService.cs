@@ -1,12 +1,14 @@
 ﻿using ShoppingBasket.Service.Models.Discounts.Contracts;
+using ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts;
 using ShoppingBasket.Service.Providers;
+using ShoppingBasket.Service.Services.ShoppingBasketDetails.Contracts;
 
-namespace ShoppingBasket.Service.Services.Shopping
+namespace ShoppingBasket.Service.Services.ShoppingBasketDetails
 {
     /// <summary>
     /// Basket calculation service
     /// </summary>
-    /// <seealso cref="ShoppingBasket.Service.Services.Shopping.IBasketCalculationService" />
+    /// <seealso cref="ShoppingBasket.Service.Services.ShoppingBasketDetails.Contracts.IBasketCalculationService" />
     internal class BasketCalculationService : IBasketCalculationService
     {
         /// <summary>

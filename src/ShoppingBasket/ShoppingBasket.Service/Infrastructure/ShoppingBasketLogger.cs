@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using ShoppingBasket.Service.Models;
+using ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts;
 using System.Reflection;
 
 namespace ShoppingBasket.Service.Infrastructure

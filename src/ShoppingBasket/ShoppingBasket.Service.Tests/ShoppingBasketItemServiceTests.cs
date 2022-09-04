@@ -1,8 +1,8 @@
 ﻿using Moq;
 using ShoppingBasket.Service.Common.Filters;
-using ShoppingBasket.Service.Models;
-using ShoppingBasket.Service.Models.Discounts.Contracts;
-using ShoppingBasket.Service.Services.Shopping;
+using ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts;
+using ShoppingBasket.Service.Services.ShoppingBasketDetails;
+using ShoppingBasket.Service.Services.ShoppingBasketDetails.Contracts;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
@@ -11,11 +11,11 @@ namespace ShoppingBasket.Service.Tests
     [ExcludeFromCodeCoverage]
     public class ShoppingBasketItemServiceTests
     {
-        private Fixture fixture;
+        private Fixture _fixture;
 
         public ShoppingBasketItemServiceTests()
         {
-            fixture = new Fixture();
+            _fixture = new Fixture();
         }
 
         [Fact]
@@ -25,9 +25,9 @@ namespace ShoppingBasket.Service.Tests
             var products = TestData.CreateProducts();
             var shoppingBasketItemService = new ShoppingBasketItemService();
 
-            var basket = await fixture.shoppingBasketService.Object.CreateShoppingBasketAsync("user_cookie_info_1");
+            var basket = await _fixture.shoppingBasketService.Object.CreateShoppingBasketAsync("user_cookie_info_1");
 
-            var items = await shoppingBasketItemService.FindShoppingBasketItemAsync(fixture.shoppingBasketItemFilterParams.Object, null, null);
+            var items = await shoppingBasketItemService.FindShoppingBasketItemAsync(_fixture.shoppingBasketItemFilterParams.Object, null, null);
 
             var expected = items.Count() + products.Count();
             var newShoppingBasketItems = new List<IShoppingBasketItem>();
@@ -44,7 +44,7 @@ namespace ShoppingBasket.Service.Tests
 
             //Act
             await shoppingBasketItemService.AddShoppingBasketItemAsync(newShoppingBasketItems);
-            items = await shoppingBasketItemService.FindShoppingBasketItemAsync(fixture.shoppingBasketItemFilterParams.Object, null, null);
+            items = await shoppingBasketItemService.FindShoppingBasketItemAsync(_fixture.shoppingBasketItemFilterParams.Object, null, null);
 
             //Assert
             Assert.Equal(expected, items.Count());
@@ -62,7 +62,7 @@ namespace ShoppingBasket.Service.Tests
                 shoppingBasketService = new Mock<IShoppingBasketService>();
                 shoppingBasketItemFilterParams = new Mock<IShoppingBasketItemFilterParams>();
 
-                IShoppingBasket shoppingBasket = new ShoppingBasketMock();
+                IShoppingBasket shoppingBasket = new TestData.ShoppingBasketMock();
                 shoppingBasket.Id = Guid.NewGuid();
                 shoppingBasket.UserIdentifier = "user_cookie_info_1";
                 shoppingBasket.DateCreated = DateTime.Now;
@@ -73,17 +73,6 @@ namespace ShoppingBasket.Service.Tests
                 shoppingBasketService.Setup(p => p.CreateShoppingBasketAsync(shoppingBasket.UserIdentifier))
                     .Returns(Task.FromResult(shoppingBasket));
             }
-        }
-
-        private class ShoppingBasketMock : IShoppingBasket
-        {
-            public string UserIdentifier { get; set; }
-            public IEnumerable<IDiscount> Discounts { get; set; }
-            public IEnumerable<IShoppingBasketItem> ShoppingBasketItems { get; set; }
-            public decimal Total { get; set; }
-            public Guid Id { get; set; }
-            public DateTime DateCreated { get; set; }
-            public DateTime DateUpdated { get; set; }
         }
     }
 }

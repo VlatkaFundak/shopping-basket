@@ -1,5 +1,6 @@
 ﻿using ShoppingBasket.Service.Common.Enums;
 using ShoppingBasket.Service.Models.Discounts.Contracts;
+using ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts;
 
 namespace ShoppingBasket.Service.Providers
 {

@@ -1,6 +1,7 @@
 ﻿using ShoppingBasket.Service.Models.Discounts.Contracts;
+using ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts;
 
-namespace ShoppingBasket.Service.Services.Shopping
+namespace ShoppingBasket.Service.Services.ShoppingBasketDetails.Contracts
 {
     /// <summary>
     /// Basket calculation service contract

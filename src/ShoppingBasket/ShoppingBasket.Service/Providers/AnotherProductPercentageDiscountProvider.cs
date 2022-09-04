@@ -1,5 +1,6 @@
 ﻿using ShoppingBasket.Service.Common.Enums;
 using ShoppingBasket.Service.Models.Discounts.Contracts;
+using ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts;
 
 namespace ShoppingBasket.Service.Providers
 {
@@ -15,7 +16,7 @@ namespace ShoppingBasket.Service.Providers
         /// <value>
         /// The type of the discount.
         /// </value>
-        public DiscountType DiscountType => DiscountType.ProductPercentage;
+        public DiscountType DiscountType => DiscountType.AnotherProductPercentage;
 
         /// <summary>
         /// Gets the discount asynchronous.

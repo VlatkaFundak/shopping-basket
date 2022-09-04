@@ -1,4 +1,6 @@
-﻿namespace ShoppingBasket.Service.Models.Factories
+﻿using ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts;
+
+namespace ShoppingBasket.Service.Models.ShoppingBasketDetails.Factories
 {
     /// <summary>
     /// Shopping basket item factory

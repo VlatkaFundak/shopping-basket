@@ -1,13 +1,14 @@
-﻿using ShoppingBasket.Service.Models;
-using ShoppingBasket.Service.Models.Products.Contracts;
+﻿using ShoppingBasket.Service.Models.Products.Contracts;
+using ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts;
 
-namespace ShoppingBasket.Service
+namespace ShoppingBasket.Service.Models.ShoppingBasketDetails
 {
     /// <summary>
-    /// Shopping basket item contract
+    /// Shopping basket item
     /// </summary>
-    /// <seealso cref="ShoppingBasket.Service.Models.IBaseModel" />
-    public interface IShoppingBasketItem : IBaseModel
+    /// <seealso cref="ShoppingBasket.Service.Models.BaseModel" />
+    /// <seealso cref="ShoppingBasket.Service.IShoppingBasketItem" />
+    public class ShoppingBasketItem : BaseModel, IShoppingBasketItem
     {
         /// <summary>
         /// Gets or sets the shopping basket identifier.
@@ -15,7 +16,7 @@ namespace ShoppingBasket.Service
         /// <value>
         /// The shopping basket identifier.
         /// </value>
-        Guid ShoppingBasketId { get; set; }
+        public Guid ShoppingBasketId { get; set; }
 
         /// <summary>
         /// Gets or sets the quantity.
@@ -23,7 +24,7 @@ namespace ShoppingBasket.Service
         /// <value>
         /// The quantity.
         /// </value>
-        decimal Quantity { get; set; }
+        public decimal Quantity { get; set; }
 
         /// <summary>
         /// Gets or sets the product identifier.
@@ -31,7 +32,7 @@ namespace ShoppingBasket.Service
         /// <value>
         /// The product identifier.
         /// </value>
-        Guid ProductId { get; set; }
+        public Guid ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the product.
@@ -39,6 +40,6 @@ namespace ShoppingBasket.Service
         /// <value>
         /// The product.
         /// </value>
-        IProduct Product { get; set; }
+        public IProduct Product { get; set; }
     }
 }

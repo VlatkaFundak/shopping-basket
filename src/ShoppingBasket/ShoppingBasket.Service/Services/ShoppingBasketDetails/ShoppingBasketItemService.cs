@@ -1,15 +1,17 @@
 ﻿using ShoppingBasket.Infrastructure.Service.Infrastructure.Extensions;
 using ShoppingBasket.Service.Common.Filters;
 using ShoppingBasket.Service.Common.QueryParams;
-using ShoppingBasket.Service.Models.Factories;
+using ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts;
+using ShoppingBasket.Service.Models.ShoppingBasketDetails.Factories;
+using ShoppingBasket.Service.Services.ShoppingBasketDetails.Contracts;
 
-namespace ShoppingBasket.Service.Services.Shopping
+namespace ShoppingBasket.Service.Services.ShoppingBasketDetails
 {
     /// <summary>
     /// Shopping basket item service
     /// </summary>
     /// <seealso cref="ShoppingBasket.Service.Services.BaseService" />
-    /// <seealso cref="ShoppingBasket.Service.Services.Shopping.IShoppingBasketItemService" />
+    /// <seealso cref="ShoppingBasket.Service.Services.ShoppingBasketDetails.Contracts.IShoppingBasketItemService" />
     public class ShoppingBasketItemService : BaseService, IShoppingBasketItemService
     {
         /// <summary>

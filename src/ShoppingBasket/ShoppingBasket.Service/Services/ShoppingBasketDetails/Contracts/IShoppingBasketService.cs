@@ -1,6 +1,6 @@
-﻿using ShoppingBasket.Service.Models;
+﻿using ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts;
 
-namespace ShoppingBasket.Service.Services.Shopping
+namespace ShoppingBasket.Service.Services.ShoppingBasketDetails.Contracts
 {
     /// <summary>
     /// Shopping basket service contract

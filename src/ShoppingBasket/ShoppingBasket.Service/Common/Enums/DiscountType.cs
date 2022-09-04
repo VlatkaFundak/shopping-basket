@@ -14,7 +14,7 @@
         /// <summary>
         /// The product percentage
         /// </summary>
-        ProductPercentage = 2,
+        AnotherProductPercentage = 2,
 
         /// <summary>
         /// The product quantity

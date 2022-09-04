@@ -1,6 +1,7 @@
 ﻿using ShoppingBasket.Service.Models.Discounts.Contracts;
+using ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts;
 
-namespace ShoppingBasket.Service.Models
+namespace ShoppingBasket.Service.Models.ShoppingBasketDetails
 {
     /// <summary>
     /// Shopping basket
