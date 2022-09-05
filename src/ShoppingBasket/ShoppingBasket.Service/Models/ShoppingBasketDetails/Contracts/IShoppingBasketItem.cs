@@ -47,7 +47,7 @@ namespace ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts
         /// <value>
         /// The discount.
         /// </value>
-        IDiscount Discount { get; set; }
+        IDiscount Discount { get; internal set; }
 
         /// <summary>
         /// Gets or sets the discount amount.
