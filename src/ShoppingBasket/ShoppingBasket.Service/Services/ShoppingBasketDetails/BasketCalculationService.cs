@@ -94,6 +94,7 @@ namespace ShoppingBasket.Service.Services.ShoppingBasketDetails
         {
             decimal discount = decimal.Zero;
 
+            // calculations based on discount with higher priority, if there are more discounts for one product, use the one with higher priority
             var groupedDiscounts = discounts.OrderBy(p => p.Priority).GroupBy(p => p.DiscountType);
 
             foreach (var groupedDiscount in groupedDiscounts)

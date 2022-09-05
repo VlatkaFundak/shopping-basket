@@ -43,7 +43,7 @@ namespace ShoppingBasket.Service.Tests
 
         // buy x get y percentage discount
         public static IAnotherProductPercentageDiscount CreateProductPercentageDiscount(int percentage, int quantity, int discountQuantity, DateTime startDate,
-            Guid? mainProductId = null, Guid? discountProductId = null)
+            Guid? mainProductId = null, Guid? discountProductId = null, int priority = 2)
         {
             var discount = new AnotherProductPercentageDiscountMock
             {
@@ -55,7 +55,7 @@ namespace ShoppingBasket.Service.Tests
                 Percentage = percentage,
                 StartDate = startDate,
                 EndDate = startDate.AddDays(15),
-                Priority = 2
+                Priority = priority
             };
 
             return discount;
@@ -63,7 +63,7 @@ namespace ShoppingBasket.Service.Tests
 
         // buy x, get x free
         public static IProductQuantityDiscount CreateExtraQuantityProductDiscount(int quantity, int discountQuantity, DateTime startDate,
-            Guid? mainProductId = null)
+            Guid? mainProductId = null, int priority = 1)
         {
             var discount = new ProductQuantityDiscountMock
             {
@@ -73,7 +73,7 @@ namespace ShoppingBasket.Service.Tests
                 DiscountQuantity = discountQuantity,
                 StartDate = startDate,
                 EndDate = startDate.AddDays(20),
-                Priority = 1
+                Priority = priority
             };
 
             return discount;
