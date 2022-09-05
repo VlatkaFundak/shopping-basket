@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
+using ShoppingBasket.Service.Common.Enums;
 using ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts;
 using System.Reflection;
+using System.Text;
 
 namespace ShoppingBasket.Service.Infrastructure
 {
@@ -9,23 +11,86 @@ namespace ShoppingBasket.Service.Infrastructure
     /// </summary>
     /// <seealso cref="ShoppingBasket.Service.Infrastructure.FileLogger" />
     /// <seealso cref="ShoppingBasket.Service.Infrastructure.IShoppingBasketLogger" />
-    internal class ShoppingBasketLogger : FileLogger, IShoppingBasketLogger //log4net usually
+    internal class ShoppingBasketLogger : IShoppingBasketLogger //log4net usually
     {
+        /// <summary>
+        /// Gets the path.
+        /// </summary>
+        /// <returns></returns>
+        private static string GetPath()
+        {
+            return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        }
+
         /// <summary>
         /// Logs the total asynchronous.
         /// </summary>
         /// <param name="shoppingBasket">The shopping basket.</param>
-        public async Task LogTotalAsync(IShoppingBasket shoppingBasket)
+        /// <returns></returns>
+        public Task LogTotalAsync(IShoppingBasket shoppingBasket)
         {
-            var filePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            StringBuilder sb = new();
 
-            using StreamWriter writer = File.AppendText(filePath + "\\" + "log.txt");
+            sb.AppendLine($"Total calculated at {DateTime.Now} :");
+            sb.AppendLine($"\t Basket owner: {shoppingBasket.UserIdentifier}");
+            sb.AppendLine("\t Product details:");
+            foreach (var item in shoppingBasket.ShoppingBasketItems)
+            {
+                sb.AppendLine($"\t\t Name: {item.Product.Name}");
+                sb.AppendLine($"\t\t Unit price: {item.Product.Price}");
+                sb.AppendLine($"\t\t Quantity: {item.Quantity}");
+                sb.AppendLine($"\t\t Total price: {item.Product.Price * (decimal)item.Quantity}");
+                sb.AppendLine($"\t\t Discount: {decimal.Round(item.DiscountAmount, 2)}");
+                sb.AppendLine($"\t\t Discount type: {item.Discount?.DiscountType ?? DiscountType.None}");
+                sb.AppendLine();
+            }
 
-            await writer.WriteAsync($"Total calculated at {DateTime.Now} : \n");
-            await writer.WriteAsync($"\t\t Basket owner: {shoppingBasket.UserIdentifier} \n");
-            await writer.WriteAsync($"\t\t Items: {JsonConvert.SerializeObject(shoppingBasket.ShoppingBasketItems)} \n");
-            await writer.WriteAsync($"\t\t Discounts: {JsonConvert.SerializeObject(shoppingBasket.Discounts)}  \n");
-            await writer.WriteAsync($"\t\t Total: {shoppingBasket.Total}  \n");
+            sb.AppendLine($"\t Total: {decimal.Round(shoppingBasket.Total, 2)}");
+            sb.AppendLine("----------------------------------------------------");
+
+            return LogMessage(sb.ToString());
+        }
+
+        /// <summary>
+        /// Logs the error.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="ex">The ex.</param>
+        /// <returns></returns>
+        public Task LogErrorAsync(string message, Exception ex)
+        {
+            return LogMessage($"{message}, Exception: {JsonConvert.SerializeObject(ex)}");
+        }
+
+        /// <summary>
+        /// Logs the error.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns></returns>
+        public Task LogErrorAsync(string message)
+        {
+            return LogMessage($"Error message: {message}");
+        }
+
+        /// <summary>
+        /// Logs the information.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns></returns>
+        public Task LogInfoAsync(string message)
+        {
+            return LogMessage($"Info message: {message}");
+        }
+
+        /// <summary>
+        /// Logs the message.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns></returns>
+        private static Task LogMessage(string message)
+        {
+            using StreamWriter writer = File.AppendText(GetPath() + "\\" + "log.txt");
+            return writer.WriteAsync(message);
         }
     }
 }

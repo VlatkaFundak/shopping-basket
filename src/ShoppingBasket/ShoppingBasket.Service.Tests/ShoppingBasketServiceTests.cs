@@ -1,4 +1,5 @@
-﻿using ShoppingBasket.Service.Models.Discounts.Contracts;
+﻿using ShoppingBasket.Service.Infrastructure.Factories;
+using ShoppingBasket.Service.Models.Discounts.Contracts;
 using ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts;
 using ShoppingBasket.Service.Providers;
 using ShoppingBasket.Service.Services.ShoppingBasketDetails;
@@ -20,7 +21,7 @@ namespace ShoppingBasket.Service.Tests
                 new AnotherProductPercentageDiscountProvider(),
                 new ProductQuantityDiscountProvider()
             };
-            _shoppingBasketService = new ShoppingBasketService(new BasketCalculationService(_providers.ToList()));
+            _shoppingBasketService = new ShoppingBasketService(new BasketCalculationService(_providers.ToList()), LoggerFactory.CreateShoppingLogger());
         }
 
         [Theory]

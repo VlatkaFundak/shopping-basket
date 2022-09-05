@@ -19,14 +19,10 @@ namespace ShoppingBasket.Service
         {
             services.AddTransient<IShoppingBasketItemService, ShoppingBasketItemService>();
             services.AddTransient<IShoppingBasketService, ShoppingBasketService>();
-
-            services.AddSingleton<IDiscountProvider, ProductQuantityDiscountProvider>();
-            services.AddSingleton<IDiscountProvider, AnotherProductPercentageDiscountProvider>();
-
+            services.AddTransient<IDiscountProvider, ProductQuantityDiscountProvider>();
+            services.AddTransient<IDiscountProvider, AnotherProductPercentageDiscountProvider>();
             services.AddTransient<IBasketCalculationService, BasketCalculationService>();
-
-            services.AddSingleton<ILogger, FileLogger>();
-            services.AddSingleton<IShoppingBasketLogger, ShoppingBasketLogger>();
+            services.AddTransient<IShoppingBasketLogger, ShoppingBasketLogger>();
         }
     }
 }

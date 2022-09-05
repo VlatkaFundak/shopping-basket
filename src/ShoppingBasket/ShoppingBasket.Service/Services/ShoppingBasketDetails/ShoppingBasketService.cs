@@ -1,5 +1,4 @@
 ﻿using ShoppingBasket.Service.Infrastructure;
-using ShoppingBasket.Service.Infrastructure.Factories;
 using ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts;
 using ShoppingBasket.Service.Models.ShoppingBasketDetails.Factories;
 using ShoppingBasket.Service.Services.ShoppingBasketDetails.Contracts;
@@ -14,18 +13,15 @@ namespace ShoppingBasket.Service.Services.ShoppingBasketDetails
     public class ShoppingBasketService : BaseService, IShoppingBasketService
     {
         /// <summary>
-        /// The logger
-        /// </summary>
-        private readonly IShoppingBasketLogger _logger;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ShoppingBasketService"/> class.
+        /// Initializes a new instance of the <see cref="ShoppingBasketService" /> class.
         /// </summary>
         /// <param name="basketCalculationService">The basket calculation service.</param>
-        internal ShoppingBasketService(IBasketCalculationService basketCalculationService)
+        /// <param name="logger">The logger.</param>
+        internal ShoppingBasketService(IBasketCalculationService basketCalculationService,
+            IShoppingBasketLogger logger)
         {
             BasketCalculationService = basketCalculationService;
-            _logger = LoggerFactory.CreateShoppingLogger();
+            Logger = logger;
         }
 
         /// <summary>
@@ -35,6 +31,14 @@ namespace ShoppingBasket.Service.Services.ShoppingBasketDetails
         /// The basket calculation service.
         /// </value>
         internal IBasketCalculationService BasketCalculationService { get; }
+
+        /// <summary>
+        /// Gets the logger.
+        /// </summary>
+        /// <value>
+        /// The logger.
+        /// </value>
+        internal IShoppingBasketLogger Logger { get; }
 
         /// <summary>
         /// Creates the shopping basket asynchronous.
@@ -65,8 +69,7 @@ namespace ShoppingBasket.Service.Services.ShoppingBasketDetails
 
             shoppingBasket.Total = await BasketCalculationService.CalculateTotalAsync(shoppingBasket.ShoppingBasketItems, shoppingBasket.Discounts);
 
-            //TODO log total
-            await _logger.LogTotalAsync(shoppingBasket);
+            await Logger.LogTotalAsync(shoppingBasket);
         }
 
         /// <summary>
@@ -80,7 +83,7 @@ namespace ShoppingBasket.Service.Services.ShoppingBasketDetails
             if (shoppingBasket is null || shoppingBasket.ShoppingBasketItems is null || !shoppingBasket.ShoppingBasketItems.Any())
             {
                 string message = "There are no items in the basket to calculate total. Please add items to cart first.";
-                _logger.LogError(message);
+                Logger.LogErrorAsync(message);
 
                 return Task.FromResult(false);
             }

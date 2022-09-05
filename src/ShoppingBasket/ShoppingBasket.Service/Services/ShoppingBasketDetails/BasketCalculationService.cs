@@ -63,7 +63,7 @@ namespace ShoppingBasket.Service.Services.ShoppingBasketDetails
             var isValid = await ValidateDiscountAsync(discounts);
             if (!isValid)
             {
-                return 0m;
+                return decimal.Zero;
             }
 
             return await CalculateDiscountAsync(shoppingBasketItems, discounts);

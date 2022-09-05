@@ -12,7 +12,7 @@ namespace ShoppingBasket.Service.Tests
 
         public static (string productName, Guid id, decimal price) BreadProduct = new("Bread", Guid.Parse("6e79a5b7-e196-4f73-8767-628552fbd26f"), 1.00m);
         public static (string productName, Guid id, decimal price) MilkProduct = new("Milk", Guid.Parse("5d61b761-9d0d-4194-bdce-7d877a192625"), 1.15m);
-        public static (string productName, Guid id, decimal price) ButterProduct = new("Milk", Guid.Parse("07e0f7b4-7904-4bef-8a09-a2c721b2bbe3"), 0.80m);
+        public static (string productName, Guid id, decimal price) ButterProduct = new("Butter", Guid.Parse("07e0f7b4-7904-4bef-8a09-a2c721b2bbe3"), 0.80m);
 
         public static IEnumerable<IProduct> CreateProducts()
         {
@@ -145,7 +145,7 @@ namespace ShoppingBasket.Service.Tests
         public class ShoppingBasketItemMock : IShoppingBasketItem
         {
             public Guid ShoppingBasketId { get; set; }
-            public decimal Quantity { get; set; }
+            public int Quantity { get; set; }
             public Guid ProductId { get; set; }
             public IProduct Product { get; set; }
             public Guid Id { get; set; }

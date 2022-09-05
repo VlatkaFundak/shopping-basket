@@ -54,19 +54,14 @@ namespace ShoppingBasket.Service.Providers
                     continue;
                 }
 
-                var quantityDiscount = (int)Math.Floor(item.Quantity / discount.MainQuantity);
-
-                var discountPrice = (discount.Percentage / 100m) * discountProduct.Product.Price;
+                int quantityDiscount = item.Quantity / discount.MainQuantity;
 
                 if (discountProduct.Quantity <= quantityDiscount)
                 {
-                    discountResult += discountProduct.Quantity * discountPrice;
-                }
-                else
-                {
-                    discountResult += quantityDiscount * discountPrice;
+                    quantityDiscount = discountProduct.Quantity;
                 }
 
+                discountResult += quantityDiscount * (discount.Percentage / 100m) * discountProduct.Product.Price;
                 discountProduct.Discount = discount;
                 discountProduct.DiscountAmount = discountResult;
             }

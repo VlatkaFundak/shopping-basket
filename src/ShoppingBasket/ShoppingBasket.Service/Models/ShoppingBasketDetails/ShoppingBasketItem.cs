@@ -26,7 +26,7 @@ namespace ShoppingBasket.Service.Models.ShoppingBasketDetails
         /// <value>
         /// The quantity.
         /// </value>
-        public decimal Quantity { get; set; }
+        public int Quantity { get; set; }
 
         /// <summary>
         /// Gets or sets the product identifier.
