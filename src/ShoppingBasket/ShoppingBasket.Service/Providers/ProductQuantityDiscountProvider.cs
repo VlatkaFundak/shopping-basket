@@ -48,7 +48,7 @@ namespace ShoppingBasket.Service.Providers
                     continue;
                 }
 
-                if (item.Discount is null && item.Quantity >= discount.MainQuantity)
+                if (item.Quantity >= discount.MainQuantity)
                 {
                     int quantityDiscount = (item.Quantity / discount.MainQuantity) * discount.DiscountQuantity;
 

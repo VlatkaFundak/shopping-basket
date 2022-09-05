@@ -100,7 +100,8 @@ namespace ShoppingBasket.Service.Services.ShoppingBasketDetails
             foreach (var groupedDiscount in groupedDiscounts)
             {
                 var provider = DiscountProviders.First(p => p.DiscountType.HasFlag(groupedDiscount.Key));
-                discount += await provider.GetDiscountAsync(shoppingBasketItems, groupedDiscount.ToList());
+                // calculate discount for items that don't have discount calculated
+                discount += await provider.GetDiscountAsync(shoppingBasketItems.Where(p => p.Discount is null).ToList(), groupedDiscount.ToList());
             }
 
             return discount;
