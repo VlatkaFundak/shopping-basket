@@ -25,11 +25,11 @@ namespace ShoppingBasket.Service.Tests
         }
 
         [Theory]
-        [InlineData(1, 1, 1, 2.95)]
-        [InlineData(2, 0, 2, 3.10)]
-        [InlineData(0, 4, 0, 3.45)]
-        [InlineData(1, 8, 2, 9.00)]
-        public async Task CalculateBasketTotalAsync_ShouldReturnTrue(int breadQuantity, int milkQuantity, int butterQuantity, decimal expected)
+        [InlineData(1, 1, 1, 2.95)] // basket has 1 bread, 1 butter, 1 milk, should return total of 2.95
+        [InlineData(2, 0, 2, 3.10)] // basket has 2 breads, 2 butters,  should return total of 2.95
+        [InlineData(0, 4, 0, 3.45)] // basket has 4 milks, should return total of 3.45
+        [InlineData(1, 8, 2, 9.00)] // basket has 2 butters, 1 bread, 8 milk, should return total of 9.00
+        public async Task CalculateBasketTotalAsync_ShouldReturnExpectedTotalWithDiscounts(int breadQuantity, int milkQuantity, int butterQuantity, decimal expected)
         {
             //Arrange - arrange values and setup everything
 
@@ -83,7 +83,7 @@ namespace ShoppingBasket.Service.Tests
         }
 
         [Theory]
-        [InlineData(5, 0, 2, 4.60)]
+        [InlineData(5, 0, 2, 4.60)] // extra bread quantity is priority discount
         public async Task CalculateBasketTotalAsync_ShouldCalculatePriorityDiscount(int breadQuantity, int milkQuantity, int butterQuantity, decimal expected)
         {
             //Arrange - arrange values and setup everything
