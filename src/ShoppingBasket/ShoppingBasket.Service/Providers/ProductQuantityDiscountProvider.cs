@@ -50,9 +50,13 @@ namespace ShoppingBasket.Service.Providers
 
                 if (item.Discount is null && item.Quantity >= discount.MainQuantity)
                 {
-                    int quantityDiscount = (item.Quantity / (discount.MainQuantity + discount.DiscountQuantity)) * discount.DiscountQuantity;
+                    int quantityDiscount = (item.Quantity / discount.MainQuantity) * discount.DiscountQuantity;
 
-                    if (item.Quantity <= quantityDiscount)
+                    if (item.Quantity < discount.MainQuantity + discount.DiscountQuantity)
+                    {
+                        quantityDiscount = 1;
+                    }
+                    else if (item.Quantity <= quantityDiscount)
                     {
                         quantityDiscount = item.Quantity;
                     }
