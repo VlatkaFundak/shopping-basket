@@ -39,10 +39,10 @@ namespace ShoppingBasket.Service.Providers
         protected virtual Task<decimal> CalculateDiscountAsync(IEnumerable<IShoppingBasketItem> shoppingBasketItems, IEnumerable<IProductQuantityDiscount> discounts)
         {
             decimal discountResult = decimal.Zero;
-
+            discounts = discounts.OrderByDescending(p => p.DiscountQuantity);
             foreach (var item in shoppingBasketItems)
             {
-                var discount = discounts.OrderByDescending(p => p.DiscountQuantity).FirstOrDefault(p => p.MainProductId == item.ProductId);
+                var discount = discounts.FirstOrDefault(p => p.MainProductId == item.ProductId);
                 if (discount is null)
                 {
                     continue;
