@@ -32,43 +32,8 @@ namespace ShoppingBasket.Service.Tests
         public async Task CalculateBasketTotalAsync_ShouldReturnExpectedTotalWithDiscounts(int breadQuantity, int milkQuantity, int butterQuantity, decimal expected)
         {
             //Arrange - arrange values and setup everything
+            var basket = await GetShoppingBasketWithItemsAsync(breadQuantity, milkQuantity, butterQuantity);
 
-            var products = ShoppingBasketFixture.CreateProducts();
-
-            var basket = await _shoppingBasketService.CreateShoppingBasketAsync("user_cookie_1");
-
-            var newShoppingBasketItems = new List<IShoppingBasketItem>();
-
-            foreach (var product in products)
-            {
-                IShoppingBasketItem item = new ShoppingBasketFixture.ShoppingBasketItemMock { ShoppingBasketId = basket.Id };
-
-                if (product.Id.Equals(ShoppingBasketFixture.ButterProduct.id) && butterQuantity > 0)
-                {
-                    item.Quantity = butterQuantity;
-                    item.ProductId = product.Id;
-                    item.Product = product;
-                    newShoppingBasketItems.Add(item);
-                }
-
-                if (product.Id.Equals(ShoppingBasketFixture.BreadProduct.id) && breadQuantity > 0)
-                {
-                    item.Quantity = breadQuantity;
-                    item.ProductId = product.Id;
-                    item.Product = product;
-                    newShoppingBasketItems.Add(item);
-                }
-
-                if (product.Id.Equals(ShoppingBasketFixture.MilkProduct.id) && milkQuantity > 0)
-                {
-                    item.Quantity = milkQuantity;
-                    item.ProductId = product.Id;
-                    item.Product = product;
-                    newShoppingBasketItems.Add(item);
-                }
-            }
-
-            basket.ShoppingBasketItems = newShoppingBasketItems;
             basket.Discounts = new List<IDiscount>
             {
                 ShoppingBasketFixture.CreateProductPercentageDiscount(50, 2, 1, new DateTime(2022, 8, 25)),
@@ -84,13 +49,50 @@ namespace ShoppingBasket.Service.Tests
 
         [Theory]
         [InlineData(5, 0, 2, 4.60)] // extra bread quantity is priority discount
-        public async Task CalculateBasketTotalAsync_ShouldCalculatePriorityDiscount(int breadQuantity, int milkQuantity, int butterQuantity, decimal expected)
+        public async Task CalculateBasketTotalAsync_ShouldCalculateQuantityPriorityDiscount(int breadQuantity, int milkQuantity, int butterQuantity, decimal expected)
         {
             //Arrange - arrange values and setup everything
+            var basket = await GetShoppingBasketWithItemsAsync(breadQuantity, milkQuantity, butterQuantity);
 
-            var products = ShoppingBasketFixture.CreateProducts();
+            basket.Discounts = new List<IDiscount>
+            {
+                ShoppingBasketFixture.CreateProductPercentageDiscount(50, 3, 3, new DateTime(2022, 8, 25), priority: 3),
+                ShoppingBasketFixture.CreateExtraQuantityProductDiscount(3, 1, new DateTime(2022, 8, 25), priority: 2),
+                ShoppingBasketFixture.CreateExtraQuantityProductDiscount(3, 2, new DateTime(2022, 8, 25), ShoppingBasketFixture.BreadProduct.id, priority: 1)
+            };
 
+            //Act
+            await _shoppingBasketService.CalculateBasketTotalAsync(basket);
+
+            //Asert
+            Assert.Equal(expected, basket.Total);
+        }
+
+        [Theory]
+        [InlineData(5, 0, 3, 6.40)] // extra bread quantity is priority discount
+        public async Task CalculateBasketTotalAsync_ShouldCalculatePercentagePriorityDiscount(int breadQuantity, int milkQuantity, int butterQuantity, decimal expected)
+        {
+            //Arrange - arrange values and setup everything
+            var basket = await GetShoppingBasketWithItemsAsync(breadQuantity, milkQuantity, butterQuantity);
+
+            basket.Discounts = new List<IDiscount>
+            {
+                ShoppingBasketFixture.CreateProductPercentageDiscount(50, 3, 2, new DateTime(2022, 8, 25), priority: 1),
+                ShoppingBasketFixture.CreateExtraQuantityProductDiscount(3, 1, new DateTime(2022, 8, 25), priority: 2),
+                ShoppingBasketFixture.CreateExtraQuantityProductDiscount(3, 2, new DateTime(2022, 8, 25), ShoppingBasketFixture.BreadProduct.id, priority: 3)
+            };
+
+            //Act
+            await _shoppingBasketService.CalculateBasketTotalAsync(basket);
+
+            //Asert
+            Assert.Equal(expected, basket.Total);
+        }
+
+        private async Task<IShoppingBasket> GetShoppingBasketWithItemsAsync(int breadQuantity, int milkQuantity, int butterQuantity)
+        {
             var basket = await _shoppingBasketService.CreateShoppingBasketAsync("user_cookie_1");
+            var products = ShoppingBasketFixture.CreateProducts();
 
             var newShoppingBasketItems = new List<IShoppingBasketItem>();
 
@@ -124,18 +126,8 @@ namespace ShoppingBasket.Service.Tests
             }
 
             basket.ShoppingBasketItems = newShoppingBasketItems;
-            basket.Discounts = new List<IDiscount>
-            {
-                ShoppingBasketFixture.CreateProductPercentageDiscount(50, 3, 1, new DateTime(2022, 8, 25)),
-                ShoppingBasketFixture.CreateExtraQuantityProductDiscount(3, 1, new DateTime(2022, 8, 25)),
-                ShoppingBasketFixture.CreateExtraQuantityProductDiscount(3, 2, new DateTime(2022, 8, 25), ShoppingBasketFixture.BreadProduct.id)
-            };
 
-            //Act
-            await _shoppingBasketService.CalculateBasketTotalAsync(basket);
-
-            //Asert
-            Assert.Equal(expected, basket.Total);
+            return basket;
         }
     }
 }

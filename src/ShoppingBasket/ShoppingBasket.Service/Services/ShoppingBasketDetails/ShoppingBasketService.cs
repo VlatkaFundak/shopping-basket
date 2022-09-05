@@ -67,6 +67,8 @@ namespace ShoppingBasket.Service.Services.ShoppingBasketDetails
                 return;
             }
 
+            // there is a dillema here should I fetch discounts per product, or get them all and handle discounts per product
+            // stayed with this approach because I have discounts per priority, so there can only be one priority discount per product
             shoppingBasket.Total = await BasketCalculationService.CalculateTotalAsync(shoppingBasket.ShoppingBasketItems, shoppingBasket.Discounts);
 
             await Logger.LogTotalAsync(shoppingBasket);

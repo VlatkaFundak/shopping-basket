@@ -61,7 +61,7 @@ namespace ShoppingBasket.Service.Providers
                     quantityDiscount = discountProduct.Quantity;
                 }
 
-                discountResult += quantityDiscount * (discount.Percentage / 100m) * discountProduct.Product.Price;
+                discountResult += quantityDiscount * (discount.Percentage / 100m) * discountProduct.Product.Price * discount.DiscountQuantity;
                 discountProduct.Discount = discount;
                 discountProduct.DiscountAmount = discountResult;
             }
