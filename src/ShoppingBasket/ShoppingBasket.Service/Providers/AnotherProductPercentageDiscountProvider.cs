@@ -40,31 +40,35 @@ namespace ShoppingBasket.Service.Providers
         {
             decimal discountResult = decimal.Zero;
 
-            foreach (var discount in discounts)
+            foreach (var item in shoppingBasketItems)
             {
-                var mainProduct = shoppingBasketItems.FirstOrDefault(p => p.ProductId == discount.MainProductId);
-                if (mainProduct is not null && mainProduct.Quantity >= discount.MainQuantity)
+                var discount = discounts.OrderByDescending(p => p.DiscountQuantity).FirstOrDefault(p => p.MainProductId.Equals(item.ProductId));
+                if (discount is null)
                 {
-                    var discountProduct = shoppingBasketItems.FirstOrDefault(p => p.ProductId == discount.DiscountProductId);
-                    if (discountProduct is null)
-                    {
-                        return Task.FromResult(0m);
-                    }
-
-                    var quantityDiscount = (int)Math.Floor(mainProduct.Quantity / discount.MainQuantity);
-
-                    var discountPrice = (discount.Percentage / 100m) * discountProduct.Product.Price;
-
-                    if (discountProduct.Quantity <= quantityDiscount)
-                    {
-                        discountResult += discountProduct.Quantity * discountPrice;
-                    }
-
-                    if (discountProduct.Quantity > quantityDiscount)
-                    {
-                        discountResult += quantityDiscount * discountPrice;
-                    }
+                    continue;
                 }
+
+                var discountProduct = shoppingBasketItems.FirstOrDefault(p => p.ProductId == discount.DiscountProductId);
+                if (discountProduct is null || discountProduct.Discount is not null)
+                {
+                    continue;
+                }
+
+                var quantityDiscount = (int)Math.Floor(item.Quantity / discount.MainQuantity);
+
+                var discountPrice = (discount.Percentage / 100m) * discountProduct.Product.Price;
+
+                if (discountProduct.Quantity <= quantityDiscount)
+                {
+                    discountResult += discountProduct.Quantity * discountPrice;
+                }
+                else
+                {
+                    discountResult += quantityDiscount * discountPrice;
+                }
+
+                discountProduct.Discount = discount;
+                discountProduct.DiscountAmount = discountResult;
             }
 
             return Task.FromResult(discountResult);

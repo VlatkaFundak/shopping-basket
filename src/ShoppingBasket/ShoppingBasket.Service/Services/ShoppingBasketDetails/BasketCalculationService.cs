@@ -94,47 +94,15 @@ namespace ShoppingBasket.Service.Services.ShoppingBasketDetails
         {
             decimal discount = decimal.Zero;
 
-            var providers = await GetActiveDiscountProviderAsync(discounts);
+            var groupedDiscounts = discounts.OrderBy(p => p.Priority).GroupBy(p => p.DiscountType);
 
-            if (providers?.Any() == true && discounts?.Any() == true)
+            foreach (var groupedDiscount in groupedDiscounts)
             {
-                var discountTasks = new List<Task<decimal>>();
-                foreach (var provider in providers)
-                {
-                    var matchingDiscounts = discounts.Where(m => m.DiscountType == provider.DiscountType).ToList();
-                    discountTasks.Add(provider.GetDiscountAsync(shoppingBasketItems, matchingDiscounts));
-                }
-
-                var results = await Task.WhenAll(discountTasks);
-
-                discount = results.Sum();
+                var provider = DiscountProviders.First(p => p.DiscountType.HasFlag(groupedDiscount.Key));
+                discount += await provider.GetDiscountAsync(shoppingBasketItems, groupedDiscount.ToList());
             }
 
             return discount;
-        }
-
-        /// <summary>
-        /// Gets the active discount provider asynchronous.
-        /// </summary>
-        /// <param name="discounts">The discounts.</param>
-        /// <returns></returns>
-        private Task<IEnumerable<IDiscountProvider>> GetActiveDiscountProviderAsync(IEnumerable<IDiscount> discounts)
-        {
-            var selectedDiscountProviders = new List<IDiscountProvider>();
-            var oneDiscount = discounts.FirstOrDefault(p => p.ExcludeOtherDiscounts);
-            if (oneDiscount is not null)
-            {
-                selectedDiscountProviders.Add(DiscountProviders.First(p => p.DiscountType.HasFlag(oneDiscount.DiscountType))); //this should throw exception if discount type does not exist in providers - not in try/catch block intentionaly
-
-                return Task.FromResult(selectedDiscountProviders.AsEnumerable());
-            }
-
-            foreach (var discount in discounts)
-            {
-                selectedDiscountProviders.Add(DiscountProviders.First(p => p.DiscountType.HasFlag(discount.DiscountType)));
-            }
-
-            return Task.FromResult(selectedDiscountProviders.AsEnumerable());
         }
     }
 }

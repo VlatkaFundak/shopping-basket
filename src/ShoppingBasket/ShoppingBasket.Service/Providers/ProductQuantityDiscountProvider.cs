@@ -40,22 +40,29 @@ namespace ShoppingBasket.Service.Providers
         {
             decimal discountResult = decimal.Zero;
 
-            foreach (var discount in discounts)
+            foreach (var item in shoppingBasketItems)
             {
-                var mainProduct = shoppingBasketItems.FirstOrDefault(p => p.ProductId == discount.MainProductId);
-                if (mainProduct is not null && mainProduct.Quantity >= discount.MainQuantity)
+                var discount = discounts.OrderByDescending(p => p.DiscountQuantity).FirstOrDefault(p => p.MainProductId == item.ProductId);
+                if (discount is null)
                 {
-                    var quantityDiscount = (int)Math.Floor(mainProduct.Quantity / (discount.MainQuantity + discount.DiscountQuantity));
+                    continue;
+                }
 
-                    if (mainProduct.Quantity <= quantityDiscount)
+                if (item.Discount is null && item.Quantity >= discount.MainQuantity)
+                {
+                    var quantityDiscount = (int)Math.Floor(item.Quantity / (discount.MainQuantity + discount.DiscountQuantity)) * discount.DiscountQuantity;
+
+                    if (item.Quantity <= quantityDiscount)
                     {
-                        discountResult += mainProduct.Quantity * mainProduct.Product.Price;
+                        discountResult += item.Quantity * item.Product.Price;
+                    }
+                    else
+                    {
+                        discountResult += quantityDiscount * item.Product.Price;
                     }
 
-                    if (mainProduct.Quantity > quantityDiscount)
-                    {
-                        discountResult += quantityDiscount * mainProduct.Product.Price;
-                    }
+                    item.Discount = discount;
+                    item.DiscountAmount = discountResult;
                 }
             }
 

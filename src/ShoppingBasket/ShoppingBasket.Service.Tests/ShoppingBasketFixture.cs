@@ -5,7 +5,7 @@ using ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts;
 
 namespace ShoppingBasket.Service.Tests
 {
-    internal static class TestData
+    internal static class ShoppingBasketFixture
     {
         public static (string categoryName, Guid id) ProductBakedGoodsCategoryName = new("Baked goods", Guid.Parse("ce450579-3998-4140-b698-0a2843912140"));
         public static (string categoryName, Guid id) ProductDairyGoodsCategoryName = new("Dairy goods", Guid.Parse("5802b263-f01e-4f48-ac66-3c14f34d208a"));
@@ -43,7 +43,7 @@ namespace ShoppingBasket.Service.Tests
 
         // buy x get y percentage discount
         public static IAnotherProductPercentageDiscount CreateProductPercentageDiscount(int percentage, int quantity, int discountQuantity, DateTime startDate,
-            bool excludeOtherDiscounts = false, Guid? mainProductId = null, Guid? discountProductId = null)
+            Guid? mainProductId = null, Guid? discountProductId = null)
         {
             var discount = new AnotherProductPercentageDiscountMock
             {
@@ -55,7 +55,7 @@ namespace ShoppingBasket.Service.Tests
                 Percentage = percentage,
                 StartDate = startDate,
                 EndDate = startDate.AddDays(15),
-                ExcludeOtherDiscounts = excludeOtherDiscounts
+                Priority = 2
             };
 
             return discount;
@@ -63,7 +63,7 @@ namespace ShoppingBasket.Service.Tests
 
         // buy x, get x free
         public static IProductQuantityDiscount CreateExtraQuantityProductDiscount(int quantity, int discountQuantity, DateTime startDate,
-            bool excludeOtherDiscounts = false, Guid? mainProductId = null)
+            Guid? mainProductId = null)
         {
             var discount = new ProductQuantityDiscountMock
             {
@@ -73,7 +73,7 @@ namespace ShoppingBasket.Service.Tests
                 DiscountQuantity = discountQuantity,
                 StartDate = startDate,
                 EndDate = startDate.AddDays(20),
-                ExcludeOtherDiscounts = excludeOtherDiscounts
+                Priority = 1
             };
 
             return discount;
@@ -109,7 +109,7 @@ namespace ShoppingBasket.Service.Tests
             public int Percentage { get; set; }
             public DiscountType DiscountType { get; set; }
             public DateTime EndDate { get; set; }
-            public bool ExcludeOtherDiscounts { get; set; }
+            public int Priority { get; set; }
             public DateTime StartDate { get; set; }
             public Guid MainProductId { get; set; }
             public Guid Id { get; set; }
@@ -123,7 +123,7 @@ namespace ShoppingBasket.Service.Tests
             public int MainQuantity { get; set; }
             public DiscountType DiscountType { get; set; }
             public DateTime EndDate { get; set; }
-            public bool ExcludeOtherDiscounts { get; set; }
+            public int Priority { get; set; }
             public DateTime StartDate { get; set; }
             public Guid MainProductId { get; set; }
             public Guid Id { get; set; }
@@ -151,6 +151,8 @@ namespace ShoppingBasket.Service.Tests
             public Guid Id { get; set; }
             public DateTime DateCreated { get; set; }
             public DateTime DateUpdated { get; set; }
+            public IDiscount Discount { get; set; }
+            public decimal DiscountAmount { get; set; }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts;
+﻿using ShoppingBasket.Service.Models.Discounts.Contracts;
+using ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts;
 using ShoppingBasket.Service.Providers;
 using ShoppingBasket.Service.Services.ShoppingBasketDetails;
 using System.Diagnostics.CodeAnalysis;
@@ -31,7 +32,7 @@ namespace ShoppingBasket.Service.Tests
         {
             //Arrange - arrange values and setup everything
 
-            var products = TestData.CreateProducts();
+            var products = ShoppingBasketFixture.CreateProducts();
 
             var basket = await _shoppingBasketService.CreateShoppingBasketAsync("user_cookie_1");
 
@@ -39,9 +40,9 @@ namespace ShoppingBasket.Service.Tests
 
             foreach (var product in products)
             {
-                IShoppingBasketItem item = new TestData.ShoppingBasketItemMock { ShoppingBasketId = basket.Id };
+                IShoppingBasketItem item = new ShoppingBasketFixture.ShoppingBasketItemMock { ShoppingBasketId = basket.Id };
 
-                if (product.Id.Equals(TestData.ButterProduct.id) && butterQuantity > 0)
+                if (product.Id.Equals(ShoppingBasketFixture.ButterProduct.id) && butterQuantity > 0)
                 {
                     item.Quantity = butterQuantity;
                     item.ProductId = product.Id;
@@ -49,7 +50,7 @@ namespace ShoppingBasket.Service.Tests
                     newShoppingBasketItems.Add(item);
                 }
 
-                if (product.Id.Equals(TestData.BreadProduct.id) && breadQuantity > 0)
+                if (product.Id.Equals(ShoppingBasketFixture.BreadProduct.id) && breadQuantity > 0)
                 {
                     item.Quantity = breadQuantity;
                     item.ProductId = product.Id;
@@ -57,7 +58,7 @@ namespace ShoppingBasket.Service.Tests
                     newShoppingBasketItems.Add(item);
                 }
 
-                if (product.Id.Equals(TestData.MilkProduct.id) && milkQuantity > 0)
+                if (product.Id.Equals(ShoppingBasketFixture.MilkProduct.id) && milkQuantity > 0)
                 {
                     item.Quantity = milkQuantity;
                     item.ProductId = product.Id;
@@ -67,7 +68,67 @@ namespace ShoppingBasket.Service.Tests
             }
 
             basket.ShoppingBasketItems = newShoppingBasketItems;
-            basket.Discounts = TestData.FindActiveDiscounts();
+            basket.Discounts = new List<IDiscount>
+            {
+                ShoppingBasketFixture.CreateProductPercentageDiscount(50, 2, 1, new DateTime(2022, 8, 25)),
+                ShoppingBasketFixture.CreateExtraQuantityProductDiscount(3, 1, new DateTime(2022, 8, 25))
+            };
+
+            //Act
+            await _shoppingBasketService.CalculateBasketTotalAsync(basket);
+
+            //Asert
+            Assert.Equal(expected, basket.Total);
+        }
+
+        [Theory]
+        [InlineData(5, 0, 2, 4.60)]
+        public async Task CalculateBasketTotalAsync_ShouldCalculatePriorityDiscount(int breadQuantity, int milkQuantity, int butterQuantity, decimal expected)
+        {
+            //Arrange - arrange values and setup everything
+
+            var products = ShoppingBasketFixture.CreateProducts();
+
+            var basket = await _shoppingBasketService.CreateShoppingBasketAsync("user_cookie_1");
+
+            var newShoppingBasketItems = new List<IShoppingBasketItem>();
+
+            foreach (var product in products)
+            {
+                IShoppingBasketItem item = new ShoppingBasketFixture.ShoppingBasketItemMock { ShoppingBasketId = basket.Id };
+
+                if (product.Id.Equals(ShoppingBasketFixture.ButterProduct.id) && butterQuantity > 0)
+                {
+                    item.Quantity = butterQuantity;
+                    item.ProductId = product.Id;
+                    item.Product = product;
+                    newShoppingBasketItems.Add(item);
+                }
+
+                if (product.Id.Equals(ShoppingBasketFixture.BreadProduct.id) && breadQuantity > 0)
+                {
+                    item.Quantity = breadQuantity;
+                    item.ProductId = product.Id;
+                    item.Product = product;
+                    newShoppingBasketItems.Add(item);
+                }
+
+                if (product.Id.Equals(ShoppingBasketFixture.MilkProduct.id) && milkQuantity > 0)
+                {
+                    item.Quantity = milkQuantity;
+                    item.ProductId = product.Id;
+                    item.Product = product;
+                    newShoppingBasketItems.Add(item);
+                }
+            }
+
+            basket.ShoppingBasketItems = newShoppingBasketItems;
+            basket.Discounts = new List<IDiscount>
+            {
+                ShoppingBasketFixture.CreateProductPercentageDiscount(50, 3, 1, new DateTime(2022, 8, 25)),
+                ShoppingBasketFixture.CreateExtraQuantityProductDiscount(3, 1, new DateTime(2022, 8, 25)),
+                ShoppingBasketFixture.CreateExtraQuantityProductDiscount(3, 2, new DateTime(2022, 8, 25), ShoppingBasketFixture.BreadProduct.id)
+            };
 
             //Act
             await _shoppingBasketService.CalculateBasketTotalAsync(basket);

@@ -25,14 +25,6 @@ namespace ShoppingBasket.Service.Models.Discounts.Contracts
         DateTime EndDate { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether [exclude other discounts].
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [exclude other discounts]; otherwise, <c>false</c>.
-        /// </value>
-        bool ExcludeOtherDiscounts { get; set; }
-
-        /// <summary>
         /// Gets or sets the start date.
         /// </summary>
         /// <value>
@@ -47,5 +39,13 @@ namespace ShoppingBasket.Service.Models.Discounts.Contracts
         /// The main product identifier.
         /// </value>
         Guid MainProductId { get; set; }
+
+        /// <summary>
+        /// Gets or sets priority.
+        /// </summary>
+        /// <value>
+        /// My property.
+        /// </value>
+        int Priority { get; set; }
     }
 }

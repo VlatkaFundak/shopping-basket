@@ -22,7 +22,7 @@ namespace ShoppingBasket.Service.Tests
         public async void AddShoppingBasketItemAsync_ShouldAddNewItems()
         {
             //Arange
-            var products = TestData.CreateProducts();
+            var products = ShoppingBasketFixture.CreateProducts();
             var shoppingBasketItemService = new ShoppingBasketItemService();
 
             var basket = await _fixture.shoppingBasketService.Object.CreateShoppingBasketAsync("user_cookie_info_1");
@@ -62,7 +62,7 @@ namespace ShoppingBasket.Service.Tests
                 shoppingBasketService = new Mock<IShoppingBasketService>();
                 shoppingBasketItemFilterParams = new Mock<IShoppingBasketItemFilterParams>();
 
-                IShoppingBasket shoppingBasket = new TestData.ShoppingBasketMock
+                IShoppingBasket shoppingBasket = new ShoppingBasketFixture.ShoppingBasketMock
                 {
                     Id = Guid.NewGuid(),
                     UserIdentifier = "user_cookie_info_1",

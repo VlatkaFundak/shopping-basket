@@ -1,4 +1,5 @@
-﻿using ShoppingBasket.Service.Models.Products.Contracts;
+﻿using ShoppingBasket.Service.Models.Discounts.Contracts;
+using ShoppingBasket.Service.Models.Products.Contracts;
 
 namespace ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts
 {
@@ -39,5 +40,21 @@ namespace ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts
         /// The product.
         /// </value>
         IProduct Product { get; set; }
+
+        /// <summary>
+        /// Gets or sets the discount.
+        /// </summary>
+        /// <value>
+        /// The discount.
+        /// </value>
+        IDiscount Discount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the discount amount.
+        /// </summary>
+        /// <value>
+        /// The discount amount.
+        /// </value>
+        decimal DiscountAmount { get; internal set; }
     }
 }
