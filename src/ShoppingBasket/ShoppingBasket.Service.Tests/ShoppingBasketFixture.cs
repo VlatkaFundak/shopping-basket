@@ -1,7 +1,8 @@
 ﻿using ShoppingBasket.Service.Common.Enums;
+using ShoppingBasket.Service.Models.Discounts;
 using ShoppingBasket.Service.Models.Discounts.Contracts;
+using ShoppingBasket.Service.Models.Products;
 using ShoppingBasket.Service.Models.Products.Contracts;
-using ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts;
 
 namespace ShoppingBasket.Service.Tests
 {
@@ -28,7 +29,7 @@ namespace ShoppingBasket.Service.Tests
 
         public static IProduct CreateProduct(Guid id, Guid productCategoryId, decimal price, string name)
         {
-            var product = new ProductMock
+            var product = new Product
             {
                 ProductCategoryId = productCategoryId,
                 Id = id,
@@ -45,7 +46,7 @@ namespace ShoppingBasket.Service.Tests
         public static IAnotherProductPercentageDiscount CreateProductPercentageDiscount(int percentage, int quantity, int discountQuantity, DateTime startDate,
             Guid? mainProductId = null, Guid? discountProductId = null, int priority = 2)
         {
-            var discount = new AnotherProductPercentageDiscountMock
+            var discount = new AnotherProductPercentageDiscount
             {
                 DiscountType = DiscountType.AnotherProductPercentage,
                 MainProductId = mainProductId ?? ButterProduct.id,
@@ -65,7 +66,7 @@ namespace ShoppingBasket.Service.Tests
         public static IProductQuantityDiscount CreateExtraQuantityProductDiscount(int quantity, int discountQuantity, DateTime startDate,
             Guid? mainProductId = null, int priority = 1)
         {
-            var discount = new ProductQuantityDiscountMock
+            var discount = new ProductQuantityDiscount
             {
                 DiscountType = DiscountType.ProductQuantity,
                 MainProductId = mainProductId ?? MilkProduct.id,
@@ -88,71 +89,6 @@ namespace ShoppingBasket.Service.Tests
             };
 
             return discounts;
-        }
-
-        private class ProductMock : IProduct
-        {
-            public string Name { get; set; }
-            public decimal Price { get; set; }
-            public Guid ProductCategoryId { get; set; }
-            public IEnumerable<IDiscount> Discounts { get; set; }
-            public Guid Id { get; set; }
-            public DateTime DateCreated { get; set; }
-            public DateTime DateUpdated { get; set; }
-        }
-
-        private class AnotherProductPercentageDiscountMock : IAnotherProductPercentageDiscount
-        {
-            public Guid DiscountProductId { get; set; }
-            public int DiscountQuantity { get; set; }
-            public int MainQuantity { get; set; }
-            public int Percentage { get; set; }
-            public DiscountType DiscountType { get; set; }
-            public DateTime EndDate { get; set; }
-            public int Priority { get; set; }
-            public DateTime StartDate { get; set; }
-            public Guid MainProductId { get; set; }
-            public Guid Id { get; set; }
-            public DateTime DateCreated { get; set; }
-            public DateTime DateUpdated { get; set; }
-        }
-
-        private class ProductQuantityDiscountMock : IProductQuantityDiscount
-        {
-            public int DiscountQuantity { get; set; }
-            public int MainQuantity { get; set; }
-            public DiscountType DiscountType { get; set; }
-            public DateTime EndDate { get; set; }
-            public int Priority { get; set; }
-            public DateTime StartDate { get; set; }
-            public Guid MainProductId { get; set; }
-            public Guid Id { get; set; }
-            public DateTime DateCreated { get; set; }
-            public DateTime DateUpdated { get; set; }
-        }
-
-        public class ShoppingBasketMock : IShoppingBasket
-        {
-            public string UserIdentifier { get; set; }
-            public IEnumerable<IDiscount> Discounts { get; set; }
-            public IEnumerable<IShoppingBasketItem> ShoppingBasketItems { get; set; }
-            public decimal Total { get; set; }
-            public Guid Id { get; set; }
-            public DateTime DateCreated { get; set; }
-            public DateTime DateUpdated { get; set; }
-        }
-
-        public class ShoppingBasketItemMock : IShoppingBasketItem
-        {
-            public Guid ShoppingBasketId { get; set; }
-            public int Quantity { get; set; }
-            public Guid ProductId { get; set; }
-            public IProduct Product { get; set; }
-            public Guid Id { get; set; }
-            public DateTime DateCreated { get; set; }
-            public DateTime DateUpdated { get; set; }
-            public IDiscount Discount { get; set; }
-            public decimal DiscountAmount { get; set; }
         }
     }
 }

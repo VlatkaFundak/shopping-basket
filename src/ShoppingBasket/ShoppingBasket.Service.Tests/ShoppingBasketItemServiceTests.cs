@@ -1,6 +1,7 @@
 ﻿using Moq;
 using ShoppingBasket.Service.Common.Filters;
 using ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts;
+using ShoppingBasket.Service.Models.ShoppingBasketDetails.Factories;
 using ShoppingBasket.Service.Services.ShoppingBasketDetails;
 using ShoppingBasket.Service.Services.ShoppingBasketDetails.Contracts;
 using System.Diagnostics.CodeAnalysis;
@@ -62,13 +63,11 @@ namespace ShoppingBasket.Service.Tests
                 shoppingBasketService = new Mock<IShoppingBasketService>();
                 shoppingBasketItemFilterParams = new Mock<IShoppingBasketItemFilterParams>();
 
-                IShoppingBasket shoppingBasket = new ShoppingBasketFixture.ShoppingBasketMock
-                {
-                    Id = Guid.NewGuid(),
-                    UserIdentifier = "user_cookie_info_1",
-                    DateCreated = DateTime.Now,
-                    DateUpdated = DateTime.Now
-                };
+                IShoppingBasket shoppingBasket = ShoppingBasketFactory.CreateShoppingBasket();
+                shoppingBasket.Id = Guid.NewGuid();
+                shoppingBasket.UserIdentifier = "user_cookie_info_1";
+                shoppingBasket.DateCreated = DateTime.Now;
+                shoppingBasket.DateUpdated = DateTime.Now;
 
                 shoppingBasketItemFilterParams.Setup(p => p.ShoppingBasketId).Returns(shoppingBasket.Id);
 

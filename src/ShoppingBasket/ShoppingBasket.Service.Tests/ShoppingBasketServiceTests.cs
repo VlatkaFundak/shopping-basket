@@ -1,6 +1,7 @@
 ﻿using ShoppingBasket.Service.Infrastructure.Factories;
 using ShoppingBasket.Service.Models.Discounts.Contracts;
 using ShoppingBasket.Service.Models.ShoppingBasketDetails.Contracts;
+using ShoppingBasket.Service.Models.ShoppingBasketDetails.Factories;
 using ShoppingBasket.Service.Providers;
 using ShoppingBasket.Service.Services.ShoppingBasketDetails;
 using System.Diagnostics.CodeAnalysis;
@@ -104,7 +105,8 @@ namespace ShoppingBasket.Service.Tests
 
             foreach (var product in products)
             {
-                IShoppingBasketItem item = new ShoppingBasketFixture.ShoppingBasketItemMock { ShoppingBasketId = basket.Id };
+                IShoppingBasketItem item = ShoppingBasketItemFactory.CreateShoppingBasketItem();
+                item.ShoppingBasketId = basket.Id;
 
                 if (product.Id.Equals(ShoppingBasketFixture.ButterProduct.id) && butterQuantity > 0)
                 {
