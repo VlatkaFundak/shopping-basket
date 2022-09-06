@@ -58,8 +58,8 @@ namespace ShoppingBasket.Service.Tests
 
             basket.Discounts = new List<IDiscount>
             {
-                ShoppingBasketFixture.CreateProductPercentageDiscount(50, 3, 3, new DateTime(2022, 8, 25), priority: 3),
-                ShoppingBasketFixture.CreateExtraQuantityProductDiscount(3, 1, new DateTime(2022, 8, 25), priority: 2),
+                ShoppingBasketFixture.CreateProductPercentageDiscount(50, 3, 3, new DateTime(2022, 8, 25), priority: 2),
+                ShoppingBasketFixture.CreateExtraQuantityProductDiscount(3, 1, new DateTime(2022, 8, 25), priority: 1),
                 ShoppingBasketFixture.CreateExtraQuantityProductDiscount(3, 2, new DateTime(2022, 8, 25), ShoppingBasketFixture.BreadProduct.id, priority: 1)
             };
 
@@ -85,7 +85,7 @@ namespace ShoppingBasket.Service.Tests
             {
                 ShoppingBasketFixture.CreateProductPercentageDiscount(50, 3, 2, new DateTime(2022, 8, 25), priority: 1),
                 ShoppingBasketFixture.CreateExtraQuantityProductDiscount(3, 1, new DateTime(2022, 8, 25), priority: 2),
-                ShoppingBasketFixture.CreateExtraQuantityProductDiscount(3, 2, new DateTime(2022, 8, 25), ShoppingBasketFixture.BreadProduct.id, priority: 3)
+                ShoppingBasketFixture.CreateExtraQuantityProductDiscount(3, 2, new DateTime(2022, 8, 25), ShoppingBasketFixture.BreadProduct.id, priority: 2)
             };
 
             //Act
